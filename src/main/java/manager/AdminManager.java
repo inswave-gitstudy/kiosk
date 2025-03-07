@@ -10,11 +10,12 @@ import java.util.Scanner;
 import model.Admin;
 
 public class AdminManager {
-	Scanner sc = new Scanner(System.in);
+	Scanner sc;
 	private Admin admin;
 	
 	public AdminManager() {
 		this.admin = new Admin();
+		this.sc = new Scanner(System.in);
 	}
 	
 	

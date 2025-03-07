@@ -5,7 +5,7 @@ import manager.AdminManager;
 
 //관리자 메뉴 화면들 보여주는 곳
 public class AdminController {
-	Scanner sc = new Scanner(System.in);
+	Scanner sc;
 	private SalesData salesdata;
 	private AdminManager amdinManager;
 	
@@ -13,6 +13,7 @@ public class AdminController {
     public AdminController() {
         this.salesdata = new SalesData();
         this.amdinManager = new AdminManager();
+        this.sc = new Scanner(System.in);
     }
     
     //로그인 테스트용
@@ -77,7 +78,7 @@ public class AdminController {
     
     //상품관리 메뉴
     private void printFoodMenu() {
-    	System.out.println("------------매출 조회 화면-----------");
+    	System.out.println("------------상품 관리 화면-----------");
     	System.out.println("1. 상품추가");
     	System.out.println("2. 상품삭제");
     	System.out.println("3. 상품조회");
