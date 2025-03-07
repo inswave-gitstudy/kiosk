@@ -18,7 +18,7 @@ public class Product {
 
     @Override
     public String toString() {
-        return name + " : " + price + "원";
+        return "상품이름 : " + name + ", 가격 : " + price;
     }
 
     @Override

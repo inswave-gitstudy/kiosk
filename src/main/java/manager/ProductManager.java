@@ -1,9 +1,11 @@
 package manager;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
 import model.Coffee;
 import model.Product;
-
-import java.util.*;
 
 public class ProductManager {
     private List<Product> products;
@@ -22,11 +24,6 @@ public class ProductManager {
         products.add(new Coffee(1L,"아메리카노",2500));
         products.add(new Coffee(2L,"카페라떼",2500));
         products.add(new Coffee(3L,"콜드브루",3000));
-        products.add(new Coffee(4L,"카푸치노",3000));
-        products.add(new Coffee(5L,"카페모카",3000));
-        products.add(new Coffee(6L,"바닐라라떼",4000));
-        products.add(new Coffee(7L,"아인슈페너",3000));
-
     }
 
     // 상품 목록 조회
@@ -37,5 +34,8 @@ public class ProductManager {
         return new ArrayList<>(products); // 원본 보호
     }
 
-
+    // 상품 추가 메서드
+    public void addProduct(Product product) {
+        products.add(product);
+    }
 }
