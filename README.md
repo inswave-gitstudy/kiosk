@@ -6,7 +6,7 @@
 ### Git Clone 으로 프로젝트 받아오기
 
    ```bash
-   git clone https://github.com/username/my-project.git
+   git clone https://github.com/inswave-gitstudy/kiosk.git
    ```
 
 ### Eclipse에서 프로젝트 불러오기
