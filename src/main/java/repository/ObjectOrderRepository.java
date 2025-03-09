@@ -12,21 +12,21 @@ public class ObjectOrderRepository implements OrderRepository {
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Override
-    public void saveOrder(Map<Long, Order> orders) {
-        Map<Long, Order> sortedOrders = new LinkedHashMap<>(orders);
+    public void saveOrder(Map<Integer, Order> orders) {
+        Map<Integer, Order> sortedOrders = new LinkedHashMap<>(orders);
         try (ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(FILE_PATH)))) {
             for (Order order : sortedOrders.values()) {
                 out.writeObject(order);  // 주문 객체 직렬화하여 파일에 저장
             }
-            System.out.println("주문이 성공적으로 저장되었습니다.");
+            System.out.println("파일 저장 완료");
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("파일 저장 오류");
         }
     }
 
     @Override
-    public Map<Long, Order> loadOrder() {
-        Map<Long, Order> orders = new LinkedHashMap<>();
+    public Map<Integer, Order> loadOrder() {
+        Map<Integer, Order> orders = new LinkedHashMap<>();
         try (ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(FILE_PATH)))) {
             Object obj;
             while ((obj = in.readObject()) != null) {
@@ -36,7 +36,7 @@ public class ObjectOrderRepository implements OrderRepository {
         } catch (EOFException e) {
             // 파일 끝에 도달한 경우
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            System.out.println("파일이 없어 주문 내역을 읽어 올 수 없습니다.");
         }
         return orders;
     }

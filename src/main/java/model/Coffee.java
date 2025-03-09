@@ -13,7 +13,7 @@ public class Coffee extends Product implements Serializable {
     private String beanType;
     private boolean isIced;
 
-    public Coffee(long productId, String name, int price) {
+    public Coffee(int productId, String name, int price) {
         super(productId, name, price);
     }
 
