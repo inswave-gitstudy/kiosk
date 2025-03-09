@@ -16,6 +16,10 @@ public class AdminManager {
 	public AdminManager() {
 		this.admin = new Admin();
 		this.sc = new Scanner(System.in);
+		
+		if(admin.getPassword() == null) {
+			initializePassword("admin74");
+		}
 	}
 	
 	
@@ -48,6 +52,13 @@ public class AdminManager {
     	}
     }
     
+    //초기에 비밀번호 초기화 하는 기능
+    public void initializePassword(String password) {
+    	String pin = encryptPassword(password);
+    	savePasswordFile(pin);
+    	admin.setPassword(pin);
+    }
+    
     // 비밀번호를 SHA-256으로 암호화하는 메서드
     private String encryptPassword(String password)  { 
         MessageDigest digest = null;
@@ -75,7 +86,6 @@ public class AdminManager {
         	fw = new FileWriter(FileName);
         	bw = new BufferedWriter(fw);
             bw.write(password);
-//            System.out.println("비밀번호가 파일에 저장되었습니다.");
         } catch (IOException e) {
             System.out.println("파일 저장 중 오류가 발생했습니다.");
             e.printStackTrace();

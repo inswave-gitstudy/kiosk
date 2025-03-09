@@ -6,12 +6,12 @@ import manager.AdminManager;
 //관리자 메뉴 화면들 보여주는 곳
 public class AdminController {
 	Scanner sc;
-	private SalesData salesdata;
+	private SalesDataController salesdata;
 	private AdminManager amdinManager;
 	
 	//생성자
     public AdminController() {
-        this.salesdata = new SalesData();
+        this.salesdata = new SalesDataController();
         this.amdinManager = new AdminManager();
         this.sc = new Scanner(System.in);
     }
@@ -36,6 +36,7 @@ public class AdminController {
     	while(true) {
     		printAdminMenu();
     		String input = sc.nextLine();
+    		System.out.println();
     		
     		switch(input) {
 	    		case "1": viewFoodMenu(); break;
@@ -65,6 +66,7 @@ public class AdminController {
     	while(true) {
     		printFoodMenu();
     		String input = sc.nextLine();
+    		System.out.println();
     		
     		switch(input) {
 	    		case "1": System.out.println("상품추가"); break;
@@ -88,18 +90,19 @@ public class AdminController {
     	System.out.print("번호를 입력하세요 >> ");
     }
     
-
     
     //매출 조회 기능
     private void viewSales() {
     	while(true) {
     		printSales();
-    		String input = sc.nextLine();;
+    		String input = sc.nextLine();
+    		System.out.println();
     		
     		switch(input) {
-	    		case "1": salesdata.getAnnualReport(); break;
+	    		case "1": salesdata.getYearReport(); break;
 	    		case "2": salesdata.getMonthlyReport(); break;
 	    		case "3": salesdata.getDailyReport(); break;
+	    		case "4": viewAdminMenu();
 	    		default: System.out.println("잘못된 입력입니다");
     		}
     	}
