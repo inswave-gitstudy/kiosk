@@ -8,7 +8,7 @@ import lombok.Setter;
 public class Dessert extends Product {
     private boolean isSlice; // 조각 여부
 
-    public Dessert(long productId, String name, int price) {
+    public Dessert(int productId, String name, int price) {
         super(productId, name, price);
     }
 
