@@ -8,7 +8,7 @@ import java.util.*;
 public class ProductManager {
     private List<Product> products;
     private Scanner scanner;
-    private long nextProductId;
+    private int nextProductId;
 
     public ProductManager() {
         this.products = new ArrayList<>();
@@ -19,14 +19,13 @@ public class ProductManager {
 
     // 테스트용으로 미리 값 박아둔것
     private void testInit() {
-        products.add(new Coffee(1L, "아메리카노", 2500));
-        products.add(new Coffee(2L, "카페라떼", 2500));
-        products.add(new Coffee(3L, "콜드브루", 3000));
-        products.add(new Coffee(4L, "카푸치노", 3000));
-        products.add(new Coffee(5L, "카페모카", 3000));
-        products.add(new Coffee(6L, "바닐라라떼", 4000));
-        products.add(new Coffee(7L, "아인슈페너", 3000));
-
+        products.add(new Coffee(1, "아메리카노", 2500));
+        products.add(new Coffee(2, "카페라떼", 2500));
+        products.add(new Coffee(3, "콜드브루", 3000));
+        products.add(new Coffee(4, "카푸치노", 3000));
+        products.add(new Coffee(5, "카페모카", 3000));
+        products.add(new Coffee(6, "바닐라라떼", 4000));
+        products.add(new Coffee(7, "아인슈페너", 3000));
     }
 
     // 상품 목록 조회
