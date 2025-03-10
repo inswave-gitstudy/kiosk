@@ -14,7 +14,7 @@ public class MainController {
     public MainController() {
         this.scanner = new Scanner(System.in);
         this.cart = new Cart();
-        this.orderController = new OrderController();
+        this.orderController = new OrderController(scanner);
         this.productManager = new ProductManager();
     }
 
@@ -39,17 +39,16 @@ public class MainController {
                     cart.showCart();
                     break;
                 case 3:
-                    orderController.createOrder();
-                    for (int i = 0; i < 800; i++) {
-                        orderController.completeOrder(i);
-                    }
-                    orderController.saveOrderWithTxt();
+                    orderController.showAllOrders();
+                    orderController.showRecipe();
                     break;
                 case 4:
                     System.out.println("관리자 화면 출력");
                     break;
                 case 5:
                     System.out.println("프로그램 종료");
+                    scanner.close();
+                    orderController.shutdownScheduler();
                     return;
                 default:
                     System.out.println("올바른 번호를 입력하세요.");

@@ -61,8 +61,8 @@ public class Order implements Serializable {
         StringBuilder result = new StringBuilder("================주문번호: " + orderId + " ====================\n상품 목록\n");
         for (Map.Entry<Product, Integer> entry : products.entrySet()) {
             result.append("- ").append(entry.getKey().getName()).append(" x ")
-                    .append(entry.getValue()).append(" (")
-                    .append(entry.getKey().getPrice()).append("원)");
+                .append(entry.getValue()).append(" (")
+                .append(entry.getKey().getPrice()).append("원)\n");
             if (entry.getKey() instanceof Coffee) {
                 Coffee coffee = (Coffee) entry.getKey();
                 result.append((coffee.isDecaf() ? " 디카페인" : " 카페인"))
