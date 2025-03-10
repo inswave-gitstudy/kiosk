@@ -1,18 +1,32 @@
 package controller;
+import java.util.Map;
 import java.util.Scanner;
 
 import manager.AdminManager;
+import manager.OrderManager;
+import model.Order;
+import model.Product;
 
 //관리자 메뉴 화면들 보여주는 곳
 public class AdminController {
 	Scanner sc;
 	private SalesDataController salesdata;
 	private AdminManager amdinManager;
+	private OrderManager orderManager;
 	
 	//생성자
     public AdminController() {
         this.salesdata = new SalesDataController();
         this.amdinManager = new AdminManager();
+        this.orderManager = new OrderManager();
+        this.sc = new Scanner(System.in);
+    }
+    
+  //생성자 테스트용
+    public AdminController(OrderManager order) {
+        this.salesdata = new SalesDataController();
+        this.amdinManager = new AdminManager();
+        this.orderManager = order;
         this.sc = new Scanner(System.in);
     }
     
@@ -131,16 +145,34 @@ public class AdminController {
     		System.out.println();
     		
     		switch(input) {
-	    		case "1": System.out.println("주문취소 기능"); break;
-	    		case "2": System.out.println("주문조회 기능"); break;
-	    		case "3": System.out.println("주문목록 기능"); break;
+	    		case "1": printCancelOrder(); break;
+	    		case "2": PrintOrderList(orderManager.getAllOrder()); break;
+	    		case "3": PrintOrderList(orderManager.getPrePareOrder()); break;
 	    		case "4": viewAdminMenu();
 	    		default: System.out.println("잘못된 입력입니다");
     		}
     	}
-    	
     }
 
+    private void printCancelOrder() {//주문취소
+    	System.out.print("취소할 주문ID를 입력하세요>> ");
+    	int input = Integer.parseInt(sc.nextLine());
+    	
+    	if(orderManager.cancelOrder(input))
+    		System.out.println("주문이 취소되었습니다");
+    	else
+    		System.out.println("주문취소를 실패했습니다");
+    }
+    
+    private void PrintOrderList(Map<Integer, Order> orderMap) {//주문조회
+    	Map<Integer, Order> orders = orderMap;
+    	
+    	for(Map.Entry<Integer, Order> entry : orders.entrySet()) {
+    		System.out.println(entry.getValue());
+    	}
+    }
+    
+    
     //주문 관리 메뉴
     private void printOrderMenu() {
     	System.out.println("------------매출 관리 화면-----------");

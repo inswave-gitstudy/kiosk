@@ -225,7 +225,9 @@ public class AdminManager {
 				
 			}
 		}
-    	return salt; //파일에 저장되어있는 암호화된 비밀번호를 리턴
+    	return salt; //파일에 저장되어있는 암호화된 Salt를 리턴
     }
+    
+    
  
 }
