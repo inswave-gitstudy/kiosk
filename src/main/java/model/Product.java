@@ -1,10 +1,12 @@
 package model;
 
-import lombok.Getter;
-
 import java.io.Serializable;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @Getter
+@Setter
 public class Product implements Serializable {
     private int productId;
     private String name;
