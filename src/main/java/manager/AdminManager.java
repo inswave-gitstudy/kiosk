@@ -44,6 +44,7 @@ public class AdminManager {
     	String password = sc.nextLine();
     	
     	if(checkLoginCredentials(password)) {
+    		printModifyPassword();
     		while(true) {
     			System.out.print("새로운 비밀번호를 입력하세요>> ");
             	password = sc.nextLine();
@@ -61,6 +62,12 @@ public class AdminManager {
     	}else {
     		System.out.println("잘못된 비밀번호입니다.");
     	}
+    }
+    
+    private void printModifyPassword() {
+    	System.out.println("\n****************비밀번호 변경 조건****************");
+		System.out.println("비밀번호는 공백은 없어야 하며, 7자리 ~ 12자리 사이여야 합니다");
+		System.out.println("또한 영문자, 숫자, 특수문자를 조합하여 작성해야 합니다\n");
     }
     
     //비밀번호 수정시에 정규식으로 조건 체크하는 기능
