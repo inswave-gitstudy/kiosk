@@ -76,16 +76,6 @@ public class Cart {
         	cart.remove(productToRemove);
         	System.out.println(productToRemove.getName() + "가 장바구니에서 삭제되었습니다.");
         }
-
-        /* 같은 옵션의 상품이 있는 경우 수량 감소, 1개 남았으면 삭제
-        if (cart.get(productToRemove) > 1) {
-            cart.put(productToRemove, cart.get(productToRemove) - 1);
-            System.out.println(productToRemove.getName() + "이(가) 한 개 삭제되었습니다. 현재 수량: " + cart.get(productToRemove));
-        } else {
-            cart.remove(productToRemove);
-            System.out.println(productToRemove.getName() + "이(가) 장바구니에서 삭제되었습니다.");
-        }
-        */
     }
 
     // 총 가격 계산
@@ -102,7 +92,7 @@ public class Cart {
         return cart.isEmpty();
     }
     
-    // productId를 기반으로 장바구니에서 상품을 찾되, 옵션까지 고려하여 선택 가능하도록 개선
+    // productId를 기반으로 장바구니에서 상품을 찾고, 옵션까지 고려하여 선택 가능하도록 개선
     public Product matchingProductInCart(Long productId) {
         List<Product> matchedProducts = new ArrayList<>();
 
