@@ -40,9 +40,10 @@ public class AdminController {
     		
     		switch(input) {
 	    		case "1": viewFoodMenu(); break;
-	    		case "2": viewSales(); break;
-	    		case "3": amdinManager.modifyPassword(); break;
-	    		case "4": viewAdminLoginMenu();
+	    		case "2": viewSalesMenu(); break;
+	    		case "3": viewOrderMenu(); break;
+	    		case "4": amdinManager.modifyPassword(); break;
+	    		case "5": viewAdminLoginMenu();
 	    		default: System.out.println("잘못된 입력입니다");
     		}
     	}
@@ -54,12 +55,13 @@ public class AdminController {
     	System.out.println("------------관리자 화면-----------");
     	System.out.println("1. 상품관리");
     	System.out.println("2. 매출조회");
-    	System.out.println("3. 비밀번호 수정");
-    	System.out.println("4. 로그아웃");
+    	System.out.println("3. 주문관리");
+    	System.out.println("4. 비밀번호 수정");
+    	System.out.println("5. 로그아웃");
     	System.out.println("---------------------------------");
     	System.out.print("번호를 입력하세요 >> ");
     }
-    
+   
     
     //상품관리 기능
     private void viewFoodMenu() {
@@ -92,9 +94,9 @@ public class AdminController {
     
     
     //매출 조회 기능
-    private void viewSales() {
+    private void viewSalesMenu() {
     	while(true) {
-    		printSales();
+    		printSalesMenu();
     		String input = sc.nextLine();
     		System.out.println();
     		
@@ -110,11 +112,41 @@ public class AdminController {
     }
     
     //매출 조회 메뉴
-    private void printSales() {
+    private void printSalesMenu() {
     	System.out.println("------------매출 관리 화면-----------");
     	System.out.println("1. 년도별 매출 통계");
     	System.out.println("2. 월별 매출 통계");
     	System.out.println("3. 일별 매출 통계");
+    	System.out.println("4. 나가기");
+    	System.out.println("---------------------------------");
+    	System.out.print("번호를 입력하세요 >> ");
+    }
+    
+    
+   //주문 관리 기능
+    private void viewOrderMenu() {
+    	while(true) {
+    		printOrderMenu();
+    		String input = sc.nextLine();
+    		System.out.println();
+    		
+    		switch(input) {
+	    		case "1": System.out.println("주문취소 기능"); break;
+	    		case "2": System.out.println("주문조회 기능"); break;
+	    		case "3": System.out.println("주문목록 기능"); break;
+	    		case "4": viewAdminMenu();
+	    		default: System.out.println("잘못된 입력입니다");
+    		}
+    	}
+    	
+    }
+
+    //주문 관리 메뉴
+    private void printOrderMenu() {
+    	System.out.println("------------매출 관리 화면-----------");
+    	System.out.println("1. 주문취소");
+    	System.out.println("2. 주문조회");
+    	System.out.println("3. 주문목록");
     	System.out.println("4. 나가기");
     	System.out.println("---------------------------------");
     	System.out.print("번호를 입력하세요 >> ");

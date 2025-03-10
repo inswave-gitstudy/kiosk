@@ -134,10 +134,11 @@ public class SalesDataController {
 	//파일 저장 여부 묻고, 저장하는 기능
 	public void printSaveSalesReportToFile(Map map, String str){
 		System.out.println();
-		System.out.print("파일로 저장하시겠습니까(y, n)>> ");
-		String input = sc.nextLine();
 		
-		Outer: while(true) {
+		while(true) {
+			System.out.print("파일로 저장하시겠습니까(y, n)>> ");
+			String input = sc.nextLine();
+			
 			switch (input) {
 				case "y":
 				case "Y": 
@@ -147,12 +148,10 @@ public class SalesDataController {
 						salesDataManager.saveMonthlySalesReportToFile(map);
 					else
 						salesDataManager.saveDailySalesReportToFile(map);
-					break Outer;
+					return;
 				case "n":
-				case "N": 
-					break Outer;
+				case "N": return;
 				default: System.out.println("잘못 입력하셨습니다");
-					break;
 			}
 		}
 		
