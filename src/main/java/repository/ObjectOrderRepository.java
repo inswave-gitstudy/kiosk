@@ -14,7 +14,7 @@ public class ObjectOrderRepository implements OrderRepository {
     @Override
     public void saveOrder(Map<Integer, Order> orders) {
         Map<Integer, Order> sortedOrders = new LinkedHashMap<>(orders);
-        try (ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(FILE_PATH)))) {
+        try (ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(FILE_PATH, true)))) {
             for (Order order : sortedOrders.values()) {
                 out.writeObject(order);  // 주문 객체 직렬화하여 파일에 저장
             }
