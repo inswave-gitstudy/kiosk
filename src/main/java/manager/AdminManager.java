@@ -124,7 +124,7 @@ public class AdminManager {
 	}
     
     //초기에 비밀번호 초기화 하는 기능
-    public void initializePassword(String password) {
+    private void initializePassword(String password) {
     	String salt = generateSalt();
     	String pin = encryptPassword(password, salt);
     	savePasswordFile(pin, salt);

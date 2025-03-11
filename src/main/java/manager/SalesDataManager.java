@@ -11,7 +11,7 @@ import model.Product;
 
 public class SalesDataManager {
 	//파일 이름 리턴하는 기능
-	public String fileTitleFormat() {
+	private String fileTitleFormat() {
 		LocalDateTime now = LocalDateTime.now();
 	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
 		return "C:\\Temp\\키오스크_통계파일_" + formatter.format(now) + ".txt";
