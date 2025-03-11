@@ -159,4 +159,9 @@ public class CartController {
 		// Manager에서 비즈니스 로직 처리
 		System.out.printf("\n%40s [총 가격: %,d원]\n", "", cartManager.calTotalPrice());
 	}
+	
+	// 카트 불러오기
+	public Map<Product, Integer> getCartItems(){
+		return cartManager.getCartItems();
+	}
 }
