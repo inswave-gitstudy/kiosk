@@ -1,5 +1,6 @@
 package controller;
 
+import manager.CartManager;
 import manager.ProductManager;
 import model.Cart;
 
@@ -7,13 +8,15 @@ import java.util.Scanner;
 
 public class MainController {
     private Scanner scanner;
-    private Cart cart;
+    private CartManager cartManager;
+    private CartController cartController;
     private OrderController orderController;
     private ProductManager productManager;
 
     public MainController() {
         this.scanner = new Scanner(System.in);
-        this.cart = new Cart();
+        this.cartManager = new CartManager(new Cart());
+        this.cartController = new CartController(cartManager);
         this.orderController = new OrderController(scanner);
         this.productManager = new ProductManager();
     }
@@ -36,7 +39,7 @@ public class MainController {
                     System.out.println("이후 카트에 담는 로직 필요");
                     break;
                 case 2:
-                    cart.showCart();
+                    cartController.showCart();
                     break;
                 case 3:
                     orderController.showAllOrders();
