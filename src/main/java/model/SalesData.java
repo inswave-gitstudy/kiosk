@@ -31,10 +31,9 @@ public class SalesData {
 	}
 
 	// 파일 불러오기
-	public void loadFile(TreeSet<Order> orderList) {
-		Iterator<Order> it = orderList.iterator();
-		while (it.hasNext()) {
-			Order order = it.next();
+	public void loadFile(TreeMap<Integer, Order> orderList) {
+		for(Map.Entry<Integer, Order> entry : orderList.entrySet()) {
+			Order order = entry.getValue();
 			LocalDate date = order.getDateTime().toLocalDate();
 			
 			if (!transactionMap.containsKey(date)) {
@@ -43,6 +42,7 @@ public class SalesData {
 			updateTransactionMap(date, order);
 		}
 	}
+	
 
 	// 특정 날짜에 대한 제품 판매량 초기화(처음에 날짜 데이터값 없을 때)
 	private void initializeDateItemMap(LocalDate date) {
