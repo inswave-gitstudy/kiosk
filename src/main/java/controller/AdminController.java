@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import manager.AdminManager;
 import manager.OrderManager;
+import manager.ProductManager;
 import model.Order;
 import model.Product;
 
@@ -13,12 +14,14 @@ public class AdminController {
 	private SalesDataController salesdata;
 	private AdminManager amdinManager;
 	private OrderManager orderManager;
+	private ProductManager productManager;
 	
 	//생성자
     public AdminController() {
         this.salesdata = new SalesDataController();
         this.amdinManager = new AdminManager();
         this.orderManager = new OrderManager();
+        this.productManager = new ProductManager();
         this.sc = new Scanner(System.in);
     }
     
@@ -26,6 +29,7 @@ public class AdminController {
     public AdminController(OrderManager order) {
         this.salesdata = new SalesDataController();
         this.amdinManager = new AdminManager();
+        this.productManager = new ProductManager();
         this.orderManager = order;
         this.sc = new Scanner(System.in);
     }
@@ -53,7 +57,7 @@ public class AdminController {
     		System.out.println();
     		
     		switch(input) {
-	    		case "1": viewFoodMenu(); break;
+	    		case "1": productManager.run(); break;
 	    		case "2": viewSalesMenu(); break;
 	    		case "3": viewOrderMenu(); break;
 	    		case "4": amdinManager.modifyPassword(); break;
@@ -78,34 +82,34 @@ public class AdminController {
    
     
     //상품관리 기능
-    private void viewFoodMenu() {
-    	while(true) {
-    		printFoodMenu();
-    		String input = sc.nextLine();
-    		System.out.println();
-    		
-    		switch(input) {
-	    		case "1": System.out.println("상품추가"); break;
-	    		case "2": System.out.println("상품삭제"); break;
-	    		case "3": System.out.println("상품조회"); break;
-	    		case "4": System.out.println("상품수정"); break;
-	    		default: System.out.println("잘못된 입력입니다");
-    		}
-    	}
-    }
+//    private void viewFoodMenu() {
+//    	while(true) {
+//    		printFoodMenu();
+//    		String input = sc.nextLine();
+//    		System.out.println();
+//    		
+//    		switch(input) {
+//	    		case "1": System.out.println("상품추가"); break;
+//	    		case "2": System.out.println("상품삭제"); break;
+//	    		case "3": System.out.println("상품조회"); break;
+//	    		case "4": System.out.println("상품수정"); break;
+//	    		default: System.out.println("잘못된 입력입니다");
+//    		}
+//    	}
+//    }
     
     //상품관리 메뉴
-    private void printFoodMenu() {
-    	System.out.println("------------상품 관리 화면-----------");
-    	System.out.println("1. 상품추가");
-    	System.out.println("2. 상품삭제");
-    	System.out.println("3. 상품조회");
-    	System.out.println("4. 상품수정");
-    	System.out.println("5. 나가기");
-    	System.out.println("---------------------------------");
-    	System.out.print("번호를 입력하세요 >> ");
-    }
-    
+//    private void printFoodMenu() {
+//    	System.out.println("------------상품 관리 화면-----------");
+//    	System.out.println("1. 상품추가");
+//    	System.out.println("2. 상품삭제");
+//    	System.out.println("3. 상품조회");
+//    	System.out.println("4. 상품수정");
+//    	System.out.println("5. 나가기");
+//    	System.out.println("---------------------------------");
+//    	System.out.print("번호를 입력하세요 >> ");
+//    }
+//    
     
     //매출 조회 기능
     private void viewSalesMenu() {
