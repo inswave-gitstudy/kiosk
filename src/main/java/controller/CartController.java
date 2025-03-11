@@ -8,6 +8,7 @@ import lombok.Getter;
 import manager.CartManager;
 import manager.ProductManager;
 import manager.ProductSelector;
+import model.Cart;
 import model.Product;
 
 @Getter
@@ -19,11 +20,11 @@ public class CartController {
 	private ProductManager productManager;
 	private Map<Product, Integer> cart; // 장바구니 (상품, 수량)
 	
-	public CartController(CartManager cartManager) {
-		this.scanner = new Scanner(System.in);
-		this.cartManager = cartManager;
-		this.productManager = new ProductManager();
-		this.productSelector = new ProductSelector(productManager);
+	public CartController(ProductManager productManager, ProductSelector productSelector, Scanner scanner) {
+		this.scanner = scanner;
+		this.cartManager = new CartManager(new Cart());
+		this.productManager = productManager;
+		this.productSelector = productSelector;
 		this.cart = this.cartManager.getCart().getCartItems();
 	}
 	

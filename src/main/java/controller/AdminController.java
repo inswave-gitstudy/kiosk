@@ -17,12 +17,12 @@ public class AdminController {
 	private ProductManager productManager;
 	
 	//생성자
-    public AdminController() {
+    public AdminController(OrderManager orderManager, ProductManager productManager, Scanner scanner) {
         this.salesdata = new SalesDataController();
         this.amdinManager = new AdminManager();
-        this.orderManager = new OrderManager();
-        this.productManager = new ProductManager();
-        this.sc = new Scanner(System.in);
+        this.orderManager = orderManager;
+        this.productManager = productManager;
+        this.sc = scanner;
     }
     
   //생성자 테스트용

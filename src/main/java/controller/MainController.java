@@ -2,23 +2,27 @@ package controller;
 
 import manager.CartManager;
 import manager.ProductManager;
+import manager.ProductSelector;
 import model.Cart;
+import model.Product;
 
 import java.util.Scanner;
 
 public class MainController {
     private Scanner scanner;
-    private CartManager cartManager;
     private CartController cartController;
     private OrderController orderController;
     private ProductManager productManager;
+    private ProductSelector productSelector;
+    private AdminController adminController;
 
     public MainController() {
         this.scanner = new Scanner(System.in);
-        this.cartManager = new CartManager(new Cart());
-        this.cartController = new CartController(cartManager);
-        this.orderController = new OrderController(scanner);
         this.productManager = new ProductManager();
+        this.productSelector = new ProductSelector(productManager);
+        this.cartController = new CartController(productManager, productSelector, scanner);
+        this.orderController = new OrderController(scanner);
+        this.adminController = new AdminController(orderController.getOrderManager(),productManager,scanner);
     }
 
     public void start() {
@@ -35,8 +39,7 @@ public class MainController {
 
             switch (choice) {
                 case 1:
-                    System.out.println("상품 목록 출력");
-                    System.out.println("이후 카트에 담는 로직 필요");
+                    cartController.addProduct();
                     break;
                 case 2:
                     cartController.showCart();
@@ -46,7 +49,7 @@ public class MainController {
                     orderController.showRecipe();
                     break;
                 case 4:
-                    System.out.println("관리자 화면 출력");
+                    adminController.viewAdminLoginMenu();
                     break;
                 case 5:
                     System.out.println("프로그램 종료");
