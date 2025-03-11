@@ -1,7 +1,6 @@
 package controller;
 
 import manager.OrderManager;
-import model.Cart;
 import model.Coffee;
 import model.Order;
 import model.Product;
@@ -64,6 +63,10 @@ public class OrderController {
         } else {
             displayOrderDetails(order);
         }
+    }
+
+    public Map<Integer,Order> getAllOrder(){
+        return orderManager.getAllOrder();
     }
 
     // 모든 주문 조회
@@ -205,4 +208,7 @@ public class OrderController {
         displayMessage("주문 자동 백업 스케줄러를 종료");
     }
 
+    public OrderManager getOrderManager() {
+        return orderManager;
+    }
 }
