@@ -251,6 +251,6 @@ $RECYCLE.BIN/
 /target/
 /orders.ser
 /AdminPassword.txt
-/orders/
+/orders/*
 /Salt.txt
 
