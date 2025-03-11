@@ -42,7 +42,7 @@ public class MainController {
                     cartController.addProduct();
                     break;
                 case 2:
-                    cartController.showCart();
+                    cartController.run();
                     break;
                 case 3:
                     orderController.showAllOrders();

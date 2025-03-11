@@ -28,14 +28,45 @@ public class CartController {
 		this.cart = this.cartManager.getCart().getCartItems();
 	}
 	
+	public void run() {
+		
+		while(true) {
+			showCart();
+			System.out.println("\t[1. 상품 추가하기]");
+			System.out.println("\t[2. 상품 삭제하기]");
+			System.out.println("\t[3. 상품 수량 변경하기]");
+			System.out.println("\t[4. 이전 화면으로 돌아가기]");
+			System.out.print("선택 : ");
+			
+			int choice = Integer.parseInt(scanner.nextLine());
+			
+			switch(choice) {
+			case 1 :
+				addProduct();
+				break;
+			case 2 :
+				deleteProduct();
+				break;
+			case 3 :
+				changeQuantity();
+				break;
+			case 4 :
+				return;
+			default :
+				System.out.println("올바른 번호를 선택해주세요!");	
+			}
+		}
+	}
+	
 	// 카트 출력
 	public void showCart() {
 		if (cart.isEmpty()) {
-            System.out.println("장바구니가 비어 있습니다.");
+			System.out.println("============== 장바구니 목록 ==============");
+            System.out.println("장바구니가 비어 있습니다. 상품을 추가해주세요!!");
             return;
         }
 
-        System.out.println("======= 장바구니 목록 =======");
+        System.out.println("============== 장바구니 목록 ==============");
         for (Map.Entry<Product, Integer> entry : cart.entrySet()) {
             Product product = entry.getKey();
             int quantity = entry.getValue();
@@ -57,7 +88,6 @@ public class CartController {
         }
 		this.cartManager.addProduct(product); // Manager에서 비즈니스 로직 처리
 		
-		System.out.println("(" + product.getName() + product.showOption() + ") 추가됨. 현재 수량 : " + cart.get(product));
 
 	}
 	
@@ -127,6 +157,6 @@ public class CartController {
 	// 카트에 담긴 상품들의 총 가격을 보여줌
 	public void showTotalPrice() {
 		// Manager에서 비즈니스 로직 처리
-		System.out.println("총 가격: " + cartManager.calTotalPrice() + "원");
+		System.out.printf("\n%40s [총 가격: %,d원]\n", "", cartManager.calTotalPrice());
 	}
 }
