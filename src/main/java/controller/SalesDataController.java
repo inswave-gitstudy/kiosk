@@ -62,9 +62,8 @@ public class SalesDataController {
 			int totalSalesAmount = 0; //총 매출
 
 			if (type.equals("DAY")) {
-				System.out.println(key);
 				System.out.println("["
-						+ String.format(formatKey, key.substring(0, 4), key.substring(4, 6), key.substring(7, 9)) + "]");
+						+ String.format(formatKey, key.substring(0, 4), key.substring(4, 6), key.substring(6)) + "]");
 			} else if (type.equals("MONTH")) {
 				System.out.println("[" + String.format(formatKey, key.substring(0, 4), key.substring(4, 6)) + "]");
 			} else {
