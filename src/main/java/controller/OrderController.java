@@ -10,6 +10,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
+import lombok.Getter;
+
+@Getter
 public class OrderController {
     private OrderManager orderManager;
     private Scanner scanner;
