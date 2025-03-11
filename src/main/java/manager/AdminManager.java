@@ -124,7 +124,7 @@ public class AdminManager {
 	}
     
     //초기에 비밀번호 초기화 하는 기능
-    public void initializePassword(String password) {
+    private void initializePassword(String password) {
     	String salt = generateSalt();
     	String pin = encryptPassword(password, salt);
     	savePasswordFile(pin, salt);
@@ -225,7 +225,9 @@ public class AdminManager {
 				
 			}
 		}
-    	return salt; //파일에 저장되어있는 암호화된 비밀번호를 리턴
+    	return salt; //파일에 저장되어있는 암호화된 Salt를 리턴
     }
+    
+    
  
 }
