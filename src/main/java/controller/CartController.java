@@ -83,7 +83,6 @@ public class CartController {
 		Product product = productSelector.selectProduct();
 		
 		if (product == null) {
-            System.out.println("상품 선택이 올바르지 않습니다.");
             return;
         }
 		this.cartManager.addProduct(product); // Manager에서 비즈니스 로직 처리
