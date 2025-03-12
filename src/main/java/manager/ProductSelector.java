@@ -12,7 +12,6 @@ public class ProductSelector {
     private ProductManager productManager;
     private Scanner scanner;
 
-    // 원두 목록 (사용자는 여기서만 선택 가능, 추가/삭제 x)
     private static final List<String> BEAN_TYPES = Arrays.asList("에티오피아", "브라질", "콜롬비아");
 
     public ProductSelector(ProductManager productManager) {
@@ -21,83 +20,138 @@ public class ProductSelector {
     }
 
     public Product selectProduct() {
-        System.out.println("===== 상품 선택 =====");
-        List<Product> products = productManager.getAllProducts();
+        while (true) {
+            System.out.println("===== 상품 선택 =====");
+            System.out.println("0. 이전 화면으로 돌아가기");
+            System.out.println("1. 커피");
+            System.out.println("2. 디저트");
+            int productTypeChoice = getValidNumberInput("상품 종류를 선택하세요: ", 0, 2);
 
-        for (int i = 0; i < products.size(); i++) {
-            System.out.println((i + 1) + ". " + products.get(i));
+            if (productTypeChoice == 0) {
+                return null;  // 이 부분은 메인 화면으로 돌아가도록 종료하는 처리입니다.
+            }
+
+            if (productTypeChoice == 1) {
+                Product coffee = selectCoffee();
+                if (coffee != null) {
+                    return coffee;
+                }
+            } else if (productTypeChoice == 2) {
+                Product dessert = selectDessert();
+                if (dessert != null) {
+                    return dessert;
+                }
+            } else {
+                System.out.println("잘못된 선택입니다. 다시 시도해주세요.");
+            }
         }
+    }
 
-        int productNumber = getValidNumberInput("상품 번호 입력: ", 1, products.size()) - 1;
-        Product selectedProduct = products.get(productNumber);
+    private Product selectCoffee() {
+        while (true) {
+            System.out.println("===== 커피 선택 =====");
+            List<Product> products = productManager.getAllProducts();
 
-        // 커피 상품일 경우 - 새로운 객체 생성 후 옵션 설정
-        if (selectedProduct instanceof Coffee) {
+            System.out.println("0. 상품 선택 화면으로 돌아가기"); // 상품 선택 화면으로 돌아가는 0번 옵션
+            for (int i = 0; i < products.size(); i++) {
+                if (products.get(i) instanceof Coffee) {
+                    System.out.println((i + 1) + ". " + products.get(i));
+                }
+            }
+
+            int productNumber = getValidNumberInput("커피 번호 입력: ", 0, products.size()) - 1;
+            if (productNumber == -1) { 
+                // 0을 누르면 커피 선택 화면을 벗어날 수 있도록 하여 메인 화면으로 돌아가게 됨
+                break;
+            }
+
+            Product selectedProduct = products.get(productNumber);
             Coffee originalCoffee = (Coffee) selectedProduct;
             Coffee coffee = new Coffee(originalCoffee.getProductId(), originalCoffee.getName(), originalCoffee.getPrice());
 
-            // 디카페인 여부 선택
-            System.out.println("디카페인 여부를 선택하세요:");
-            System.out.println("1. 카페인  2. 디카페인");
-            int decafChoice = getValidNumberInput("번호 입력: ", 1, 2);
+            System.out.println("카페인 여부를 선택하세요:");
+            System.out.println("0. 커피 선택으로 돌아가기");
+            System.out.println("1. 카페인");
+            System.out.println("2. 디카페인");
+            int decafChoice = getValidNumberInput("번호 입력: ", 0, 2);
+            if (decafChoice == 0) continue; // 0 입력 시 커피 선택으로 돌아가기
             coffee.setDecaf(decafChoice == 2);
 
-            // 원두 선택
             System.out.println("원두를 선택하세요:");
+            System.out.println("0. 커피 선택으로 돌아가기");
             for (int i = 0; i < BEAN_TYPES.size(); i++) {
                 System.out.println((i + 1) + ". " + BEAN_TYPES.get(i));
             }
-            int beanChoice = getValidNumberInput("번호 입력: ", 1, BEAN_TYPES.size());
+            int beanChoice = getValidNumberInput("번호 입력: ", 0, BEAN_TYPES.size());
+            if (beanChoice == 0) continue; // 0 입력 시 커피 선택으로 돌아가기
             coffee.setBeanType(BEAN_TYPES.get(beanChoice - 1));
 
-            // 아이스 여부 선택
             System.out.println("아이스 여부를 선택하세요:");
-            System.out.println("1. 핫  2. 아이스");
-            int icedChoice = getValidNumberInput("번호 입력: ", 1, 2);
+            System.out.println("0. 커피 선택으로 돌아가기  1. 핫  2. 아이스");
+            System.out.println("1. 핫");
+            System.out.println("2. 아이스");
+            int icedChoice = getValidNumberInput("번호 입력: ", 0, 2);
+            if (icedChoice == 0) continue; // 0 입력 시 커피 선택으로 돌아가기
             coffee.setIced(icedChoice == 2);
 
-            System.out.println("선택된 상품: " + coffee.showOption());
+            System.out.println("선택된 커피: " + coffee.showOption());
             return coffee;
+        }
 
-        // 디저트 상품일 경우 - 새로운 객체 생성 후 옵션 설정
-        } else if (selectedProduct instanceof Dessert) {
+        return null;  // 커피 선택 화면을 벗어나서 null 반환
+    }
+
+    private Product selectDessert() {
+        while (true) {
+            System.out.println("===== 디저트 선택 =====");
+            List<Product> products = productManager.getAllProducts();
+
+            System.out.println("0. 상품 선택 화면으로 돌아가기"); // 상품 선택 화면으로 돌아가는 0번 옵션
+            for (int i = 0; i < products.size(); i++) {
+                if (products.get(i) instanceof Dessert) {
+                    System.out.println((i + 1) + ". " + products.get(i));
+                }
+            }
+
+            int productNumber = getValidNumberInput("디저트 번호 입력: ", 0, products.size()) - 1;
+            if (productNumber == -1) { 
+                // 0을 누르면 디저트 선택 화면을 벗어날 수 있도록 하여 메인 화면으로 돌아가게 됨
+                break;
+            }
+
+            Product selectedProduct = products.get(productNumber);
             Dessert originalDessert = (Dessert) selectedProduct;
             Dessert dessert = new Dessert(originalDessert.getProductId(), originalDessert.getName(), originalDessert.getPrice());
 
-            // 케이크 조각 여부 선택
             System.out.println("케이크 종류를 선택하세요:");
-            System.out.println("1. 조각 케이크  2. 홀 케이크");
-            int sliceChoice = getValidNumberInput("번호 입력: ", 1, 2);
+            System.out.println("0. 디저트 선택으로 돌아가기");
+            System.out.println("1. 조각 케이크");
+            System.out.println("2. 홀 케이크");
+            int sliceChoice = getValidNumberInput("번호 입력: ", 0, 2);
+            if (sliceChoice == 0) continue; // 0 입력 시 디저트 선택으로 돌아가기
             dessert.setSlice(sliceChoice == 1);
 
-            System.out.println("선택된 상품: " + dessert.showOption());
+            System.out.println("선택된 디저트: " + dessert.showOption());
             return dessert;
         }
 
-        return null;
+        return null;  // 디저트 선택 화면을 벗어나서 null 반환
     }
 
-    // 유효한 숫자 입력을 받을 때까지 반복하는 메서드
     private int getValidNumberInput(String message, int min, int max) {
-        while (true) {  // 무한 루프 시작
-            System.out.print(message);  // 사용자에게 입력을 요청하는 메시지 출력
-            String input = scanner.nextLine();  // 사용자로부터 문자열 입력 받기
-
+        while (true) {
+            System.out.print(message);
+            String input = scanner.nextLine();
             try {
-                // 입력 받은 문자열을 정수로 변환 시도
                 int number = Integer.parseInt(input);
-                
-                // 숫자가 min과 max 사이에 있는지 체크
                 if (number >= min && number <= max) {
-                    return number;  // 조건을 만족하면 숫자 반환
+                    return number; 
                 } else {
-                    System.out.println("잘못된 입력입니다. 알맞은 숫자를 입력해주세요.");  // 범위 밖의 숫자 입력 시 메시지 출력
+                    System.out.println("잘못된 입력입니다. 알맞은 숫자를 입력해주세요.");
                 }
             } catch (NumberFormatException e) {
-                // 입력 받은 값이 숫자가 아닐 경우 예외 처리
-                System.out.println("잘못된 입력입니다. 숫자를 입력해 주세요.");  // 숫자가 아닌 값을 입력했을 때 메시지 출력
+                System.out.println("잘못된 입력입니다. 숫자를 입력해 주세요.");
             }
         }
     }
-
 }
