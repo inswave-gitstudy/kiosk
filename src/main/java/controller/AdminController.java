@@ -30,7 +30,7 @@ public class AdminController {
 		count = 0; //비밀번호 오류횟수 초기화
 
 		while (true) {
-			System.out.print("관리자 비밀번호를 입력하세요>> ");
+			System.out.print("\n관리자 비밀번호를 입력하세요>> ");
 			String password = sc.nextLine().trim().replace(" ", "");
 
 			if (adminManager.checkLoginCredentials(password)) {
@@ -39,7 +39,7 @@ public class AdminController {
 			} 
 			else if(count == 2){
 				System.out.println("3회 오류입니다");
-				System.out.println("메인으로 돌아갑니다\n");
+				System.out.println("메인으로 돌아갑니다");
 				break;
 			}
 			else {
@@ -47,7 +47,7 @@ public class AdminController {
 			}
 
 			System.out.println(count + "회 오류입니다");
-			System.out.println("3회 이상 오류시에 메인으로 돌아갑니다\n");
+			System.out.println("3회 이상 오류시에 메인으로 돌아갑니다");
 		}
 	}
 
