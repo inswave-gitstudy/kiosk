@@ -19,17 +19,25 @@ public class ProductManager {
 
     // 테스트용으로 미리 값 박아둔것
     private void testInit() {
-		addProduct("아메리카노", 2500);
-		addProduct("카페라떼", 2500);
-		addProduct("콜드브루", 3000);
-		addProduct("카푸치노", 3000);
-		addProduct("카페모카", 3000);
-		addProduct("바닐라라떼", 2500);
-		addProduct("아인슈페너",3000);
+		addProductCoffee("아메리카노", 2500);
+		addProductCoffee("카페라떼", 2500);
+		addProductCoffee("콜드브루", 3000);
+		addProductCoffee("카푸치노", 3000);
+		addProductCoffee("카페모카", 3000);
+		addProductCoffee("바닐라라떼", 2500);
+		addProductCoffee("아인슈페너",3000);
+		addProductDessert("딸기케이크",5500);		
+		addProductDessert("초코케이크",5000);
     }
 
-	private void addProduct(String name, int price) {
+	private void addProductCoffee(String name, int price) {
+		Coffee coffee = new Coffee(nextProductId, name, price);
 		products.add(new Coffee(nextProductId, name, price));
+		nextProductId++;
+	}
+	
+	private void addProductDessert(String name, int price) {
+		products.add(new Dessert(nextProductId, name, price));
 		nextProductId++;
 	}
 
@@ -58,8 +66,19 @@ public class ProductManager {
 			System.out.println("잘못된 입력입니다. 가격은 숫자로 입력해주세요.");
 			return;
 		}
-		products.add(new Coffee(nextProductId, name, price));
-		nextProductId++;	
+		System.out.println("커피 카테고리는 1번, 디저트 카테고리는 2번을 선택해주세요.");
+		int categoryNum = Integer.parseInt(scanner.nextLine());	//커피는 1번, 디저트는 2번으로 분류
+		if(categoryNum==1) {
+			System.out.println("커피 카테고리에 상품 추가합니다.");
+			products.add(new Coffee(nextProductId, name, price));
+		} else {
+			System.out.println("디저트 카테고리에 상품 추가합니다.");
+			products.add(new Dessert(nextProductId, name, price));
+		}
+		System.out.println("[ "+"id:"+nextProductId+", "+"name:"+name+
+				", "+"price:"+price+" ]" + " 상품이 추가되었습니다.");
+		nextProductId++;
+
 	}
 	
 	//상품 삭제
@@ -84,15 +103,16 @@ public class ProductManager {
 			int selectNum = Integer.parseInt(scanner.nextLine());
 			if (selectNum==1) {
 				products.remove(productToRemove);
-			} else {
+				System.out.println("[ "+"id:"+productToRemove.getProductId()+", "+"name:"+productToRemove.getName()+
+						", "+"price:"+productToRemove.getPrice()+" ]" + " 상품이 삭제되었습니다.");
 			}
 		}
-		System.out.println("변경했습니다.");
+
 	}
 	
     //상품 리스트 조회
     public List<Product> getAllProducts() {
-        return new ArrayList<>(products); // 원본 보호
+        return new ArrayList<>(products);
     }
 	
 	//상품 수정
@@ -120,10 +140,10 @@ public class ProductManager {
 			System.out.println("해당 상품 ID가 리스트에 없습니다");
 			return;
 		} else {
-			System.out.println("이름 변경은 1번, 가격 변경은 2번을 선택해주세요.");
+			System.out.println("이름 수정은 1번, 가격 수정은 2번을 선택해주세요.");
 			int selectNum = Integer.parseInt(scanner.nextLine());
 			if (selectNum==1) {
-				System.out.println("변경하실 이름을 입력해주세요: ");
+				System.out.println("수정하실 이름을 입력해주세요: ");
 				String name = scanner.nextLine();
 				boolean isNoSpecialChar = removeSpecialCharacters(name);	//이름 특수문자 여부 확인
 				if (!isNoSpecialChar) {
@@ -139,7 +159,7 @@ public class ProductManager {
 				productToChange.setName(name);	//이름 수정 
 			} else {
 				try {
-					System.out.println("변경하실 가격을 입력해주세요: ");
+					System.out.println("수정하실 가격을 입력해주세요: ");
 					price = Integer.parseInt(scanner.nextLine());
 				} catch (Exception e) {
 					System.out.println("잘못된 입력입니다. 가격은 숫자로 입력해주세요.");
@@ -148,7 +168,9 @@ public class ProductManager {
 				productToChange.setPrice(price);
 			}
 		}
-		System.out.println("변경했습니다");	
+		System.out.println("[ "+"id:"+productToChange.getProductId()+", "+"name:"+productToChange.getName()+
+				", "+"price:"+productToChange.getPrice()+" ]" + " 상품으로 수정되었습니다.");
+		
 	}
     
     //상품명 리스트 생성
@@ -176,10 +198,8 @@ public class ProductManager {
 	public boolean removeSpecialCharacters(String str) {
 		return Pattern.matches("[가-힣a-zA-Z0-9]+", str);
 	}
-	
-	public void run() {
 
-		//testInit();
+	public void run() {
 
 		while(true) {
 			showProducts();
