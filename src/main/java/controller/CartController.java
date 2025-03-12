@@ -38,7 +38,16 @@ public class CartController {
 			System.out.println("\t[4. 이전 화면으로 돌아가기]");
 			System.out.print("선택 : ");
 			
-			int choice = Integer.parseInt(scanner.nextLine());
+			int choice;
+	        while (true) {
+	            try {
+	                choice = Integer.parseInt(scanner.nextLine());
+	                break;
+	            } catch (NumberFormatException e) {
+	                System.out.println("숫자만 입력해주세요.");
+	                System.out.print("다시 입력: ");
+	            }
+	        }
 			
 			switch(choice) {
 			case 1 :
@@ -93,7 +102,16 @@ public class CartController {
 	// 카트에 담긴 상품 삭제
 	public void deleteProduct() {
 		System.out.println("삭제할 상품의 상품번호를 입력해주세요:");
-        int productId = Integer.parseInt(scanner.nextLine());
+		int productId;
+		while (true) {
+            try {
+            	productId = Integer.parseInt(scanner.nextLine());
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("숫자만 입력해주세요.");
+                System.out.print("다시 입력: ");
+            }
+        }
         
         List<Product> matchingProducts = cartManager.getMatchingProducts(productId);
         if (matchingProducts.isEmpty()) {
@@ -112,7 +130,16 @@ public class CartController {
 	// 카트에 담긴 상품의 수량 조절
 	public void changeQuantity() {
         System.out.println("수량을 변경할 상품의 상품번호를 입력해주세요:");
-        int productId = Integer.parseInt(scanner.nextLine());
+        int productId;
+		while (true) {
+            try {
+            	productId = Integer.parseInt(scanner.nextLine());
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("숫자만 입력해주세요.");
+                System.out.print("다시 입력: ");
+            }
+        }
 
         List<Product> matchingProducts = cartManager.getMatchingProducts(productId);
         if (matchingProducts.isEmpty()) {
@@ -143,7 +170,16 @@ public class CartController {
         }
 
         System.out.print("옵션 번호 입력: ");
-        int optionIndex = Integer.parseInt(scanner.nextLine()) - 1;
+        int optionIndex;
+		while (true) {
+            try {
+            	optionIndex = Integer.parseInt(scanner.nextLine()) - 1;
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("숫자만 입력해주세요.");
+                System.out.print("다시 입력: ");
+            }
+        }
 
         if (optionIndex < 0 || optionIndex >= products.size()) {
             System.out.println("잘못된 입력입니다.");
