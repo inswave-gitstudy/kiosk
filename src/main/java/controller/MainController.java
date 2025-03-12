@@ -24,7 +24,7 @@ public class MainController {
         this.productSelector = new ProductSelector(productManager);
         this.cartController = new CartController(productManager, productSelector, scanner);
         this.orderController = new OrderController(scanner);
-        this.salesDataController = new SalesDataController(productManager, orderController.getOrderManager());
+        this.salesDataController = new SalesDataController(productManager, orderController);
         this.adminController = new AdminController(productManager, scanner, orderController, salesDataController);
     }
 

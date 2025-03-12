@@ -16,8 +16,8 @@ public class SalesDataController {
 	private SalesData salesData;
 
 	// 생성자
-	public SalesDataController(ProductManager productManager, OrderManager orderManager) {
-		this.salesData = new SalesData(productManager, orderManager);
+	public SalesDataController(ProductManager productManager, OrderController orderController) {
+		this.salesData = new SalesData(productManager, orderController);
 		this.salesDataManager = new SalesDataManager(this.salesData);
 		this.sc = new Scanner(System.in);
 	}
