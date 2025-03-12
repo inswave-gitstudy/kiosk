@@ -18,14 +18,12 @@ public class AdminManager {
 	private Scanner sc;
 	private Admin admin; 
 	private String salt; //로그인시에 사용할 salt
-	private FilePathUtil filePathUtil;
 	
 	//생성자
 	public AdminManager() {
 		this.admin = new Admin();
 		this.sc = new Scanner(System.in);
 		this.salt = saltLoad();
-		this.filePathUtil = new FilePathUtil();
 		
 		if(admin.getPassword() == null) {
 			initializePassword("admin74");
@@ -159,11 +157,11 @@ public class AdminManager {
     
     // 암호화된 비밀번호를 파일에 저장
     private void savePasswordFile(String password, String salt) {
-    	String FileName = filePathUtil.getBaseDirectory() + "AdminPassword.txt";
+    	String FileName = FilePathUtil.getBaseDirectory() + "AdminPassword.txt";
     	FileWriter fw = null;
     	BufferedWriter bw = null;
     	
-    	String FileName2 = filePathUtil.getBaseDirectory() + "Salt.txt";
+    	String FileName2 = FilePathUtil.getBaseDirectory() + "Salt.txt";
     	FileWriter fw2 = null;
     	BufferedWriter bw2 = null;
     	
@@ -210,7 +208,7 @@ public class AdminManager {
 
     //salt를 로드해서 저장하는 기능
     private String saltLoad() {
-    	File file = new File(filePathUtil.getBaseDirectory()+"Salt.txt");
+    	File file = new File(FilePathUtil.getBaseDirectory()+"Salt.txt");
     	FileReader fr = null;
 		BufferedReader br = null;
 		String salt = "";
