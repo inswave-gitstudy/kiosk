@@ -103,11 +103,10 @@ public class ProductManager {
 			int selectNum = Integer.parseInt(scanner.nextLine());
 			if (selectNum==1) {
 				products.remove(productToRemove);
-			} else {
+				System.out.println("[ "+"id:"+productToRemove.getProductId()+", "+"name:"+productToRemove.getName()+
+						", "+"price:"+productToRemove.getPrice()+" ]" + " 상품이 삭제되었습니다.");
 			}
 		}
-		System.out.println("[ "+"id:"+productToRemove.getProductId()+", "+"name:"+productToRemove.getName()+
-				", "+"price:"+productToRemove.getPrice()+" ]" + " 상품이 삭제되었습니다.");
 
 	}
 	
@@ -201,8 +200,6 @@ public class ProductManager {
 	}
 
 	public void run() {
-
-		//testInit();
 
 		while(true) {
 			showProducts();
