@@ -32,7 +32,7 @@ public class AdminManager {
 	
 	//로그인 기능
     public boolean checkLoginCredentials(String inputPassword) {	
-        String hashPassword = encryptPassword(inputPassword, this.salt);
+        String hashPassword = encryptPassword(inputPassword.trim(), this.salt);
   
         if(hashPassword.equals(admin.getPassword()))
         	return true;
@@ -42,18 +42,25 @@ public class AdminManager {
 
     //비밀번호 수정하는 기능
     public void modifyPassword() {
-    	System.out.print("현재 비밀번호를 입력하세요>> ");
-    	String password = sc.nextLine();
+    	System.out.print("현재 비밀번호를 입력하세요(취소: n)>> ");
+    	String password = sc.nextLine().trim();
     	
-    	if(checkLoginCredentials(password)) {
-    		printModifyPassword();
+    	if(password.equals("n") || password.equals("N")) {
+    		return;
+    	}
+    	else if(checkLoginCredentials(password)) {
+    		printModifyPassword(); //비밀번호 조건메뉴 표시
+    		
     		while(true) {
-    			System.out.print("새로운 비밀번호를 입력하세요>> ");
-            	password = sc.nextLine();
+    			System.out.print("새로운 비밀번호를 입력하세요(취소: n)>> ");
+            	password = sc.nextLine().trim();
             	
-    			if(checkPassword(password.trim())) {
+            	if(password.equals("n") || password.equals("N")) {
+            		break;
+            	}
+            	else if(checkPassword(password)) {
     				String salt = generateSalt();
-    				String newHashPassword = encryptPassword(password.trim(), salt);
+    				String newHashPassword = encryptPassword(password, salt);
     	        	savePasswordFile(newHashPassword, salt); //비밀번호를 암호화후에 파일에 저장
     	        	admin.setPassword(newHashPassword);//Admin 클래스에 있는 비밀번호를 새로운 비밀번호로 수정
     	        	

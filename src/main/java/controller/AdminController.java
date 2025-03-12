@@ -126,7 +126,7 @@ public class AdminController {
 		System.out.println("1. 주문취소");
 		System.out.println("2. 주문조회");
 		System.out.println("3. 주문목록");
-		System.out.println("4. 주문취소");
+		System.out.println("4. 주문완료");
 		System.out.println("5. 나가기");
 		System.out.println("---------------------------------");
 		System.out.print("번호를 입력하세요 >> ");
