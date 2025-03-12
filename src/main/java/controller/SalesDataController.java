@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
 
-import manager.OrderManager;
 import manager.ProductManager;
 import manager.SalesDataManager;
 import model.Product;

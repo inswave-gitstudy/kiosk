@@ -1,13 +1,8 @@
 package controller;
-import java.util.Map;
 import java.util.Scanner;
 
 import manager.AdminManager;
-import manager.OrderManager;
 import manager.ProductManager;
-import manager.SalesDataManager;
-import model.Order;
-import model.Product;
 
 //관리자 메뉴 화면들 보여주는 곳
 public class AdminController {

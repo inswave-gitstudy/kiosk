@@ -3,7 +3,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
-import manager.AdminManager;
 import utils.FilePathUtil;
 
 public class Admin {
