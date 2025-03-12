@@ -46,7 +46,7 @@ public class AdminController {
     private void viewAdminMenu() {
     	while(true) {
     		printAdminMenu();
-    		String input = sc.nextLine();
+    		String input = sc.nextLine().trim();
     		System.out.println();
     		
     		switch(input) {
@@ -78,14 +78,15 @@ public class AdminController {
     private void viewOrderMenu() {
     	while(true) {
     		printOrderMenu();
-    		String input = sc.nextLine();
+    		String input = sc.nextLine().trim();
     		System.out.println();
     		
     		switch(input) {
 	    		case "1": orderController.cancelOrder(); break;
 	    		case "2": orderController.getAllOrder(); break;
 	    		case "3": orderController.getPrepareOrder(); break;
-	    		case "4": viewAdminMenu();
+	    		case "4": orderController.completeOrder(); break;
+	    		case "5" : return;
 	    		default: System.out.println("잘못된 입력입니다");
     		}
     	}
@@ -98,7 +99,8 @@ public class AdminController {
     	System.out.println("1. 주문취소");
     	System.out.println("2. 주문조회");
     	System.out.println("3. 주문목록");
-    	System.out.println("4. 나가기");
+    	System.out.println("4. 주문취소");
+    	System.out.println("5. 나가기");
     	System.out.println("---------------------------------");
     	System.out.print("번호를 입력하세요 >> ");
     }

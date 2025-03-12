@@ -12,17 +12,20 @@ import java.util.Base64;
 import java.util.Scanner;
 
 import model.Admin;
+import utils.FilePathUtil;
 
 public class AdminManager {
 	private Scanner sc;
 	private Admin admin; 
 	private String salt; //로그인시에 사용할 salt
+	private FilePathUtil filePathUtil;
 	
 	//생성자
 	public AdminManager() {
 		this.admin = new Admin();
 		this.sc = new Scanner(System.in);
 		this.salt = saltLoad();
+		this.filePathUtil = new FilePathUtil();
 		
 		if(admin.getPassword() == null) {
 			initializePassword("admin74");
@@ -30,9 +33,9 @@ public class AdminManager {
 	}
 	
 	//로그인 기능
-    public boolean checkLoginCredentials(String inputPassword) {
+    public boolean checkLoginCredentials(String inputPassword) {	
         String hashPassword = encryptPassword(inputPassword, this.salt);
-
+  
         if(hashPassword.equals(admin.getPassword()))
         	return true;
         else
@@ -156,11 +159,11 @@ public class AdminManager {
     
     // 암호화된 비밀번호를 파일에 저장
     private void savePasswordFile(String password, String salt) {
-    	String FileName = "AdminPassword.txt";
+    	String FileName = filePathUtil.getBaseDirectory() + "AdminPassword.txt";
     	FileWriter fw = null;
     	BufferedWriter bw = null;
     	
-    	String FileName2 = "Salt.txt";
+    	String FileName2 = filePathUtil.getBaseDirectory() + "Salt.txt";
     	FileWriter fw2 = null;
     	BufferedWriter bw2 = null;
     	
@@ -207,7 +210,7 @@ public class AdminManager {
 
     //salt를 로드해서 저장하는 기능
     private String saltLoad() {
-    	File file = new File("Salt.txt");
+    	File file = new File(filePathUtil.getBaseDirectory()+"Salt.txt");
     	FileReader fr = null;
 		BufferedReader br = null;
 		String salt = "";

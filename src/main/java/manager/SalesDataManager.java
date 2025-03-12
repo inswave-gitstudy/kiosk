@@ -13,20 +13,23 @@ import java.util.TreeMap;
 
 import model.Product;
 import model.SalesData;
+import utils.FilePathUtil;
 
 public class SalesDataManager {
 	private SalesData salesData;
+	private FilePathUtil filePathUtil;
 
 	//생성자
 	public SalesDataManager(SalesData salesData) {
 		this.salesData = salesData;
+		this.filePathUtil = new FilePathUtil();
 	}
 
 	// 파일 이름 리턴하는 기능
 	private String fileTitleFormat() {
 		LocalDateTime now = LocalDateTime.now();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-		return "C:\\Temp\\키오스크_통계파일_" + formatter.format(now) + ".csv";
+		return filePathUtil.getBaseDirectory() + "키오스크_통계파일_" + formatter.format(now) + ".csv";
 	}
 
 	//CSV파일로 저장함

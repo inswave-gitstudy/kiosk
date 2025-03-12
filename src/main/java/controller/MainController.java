@@ -48,7 +48,7 @@ public class MainController {
                     cartController.run();
                     break;
                 case 3:
-                    // orderController.createOrder();
+                     orderController.createOrder(cartController.getCartItems());
                     break;
                 case 4:
                     adminController.viewAdminLoginMenu();
