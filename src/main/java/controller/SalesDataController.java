@@ -1,160 +1,155 @@
 package controller;
 
-import java.io.PrintWriter;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Scanner;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
+import manager.OrderManager;
 import manager.ProductManager;
 import manager.SalesDataManager;
-import model.Order;
 import model.Product;
 import model.SalesData;
 
 public class SalesDataController {
-	private ProductManager productManager; 
+	private Scanner sc;
 	private SalesDataManager salesDataManager;
 	private SalesData salesData;
-	private Scanner sc;
 
-	public SalesDataController() {
-		this.productManager = new ProductManager();
-		this.salesDataManager = new SalesDataManager();
-		this.salesData = new SalesData();
+	// 생성자
+	public SalesDataController(ProductManager productManager, OrderManager orderManager) {
+		this.salesData = new SalesData(productManager, orderManager);
+		this.salesDataManager = new SalesDataManager(this.salesData);
 		this.sc = new Scanner(System.in);
 	}
 
-	// 테스트용 생성자
-	public SalesDataController(List<Product> productList, SalesData salesData) {
-		this.productManager = new ProductManager();
-		this.salesDataManager = new SalesDataManager();
-		this.salesData = salesData;
-		this.sc = new Scanner(System.in);
-	}
-	
-	
-	//일별로 출력
-	public void getDailyReport() {
-		Map <LocalDate, Map<Product, Integer>>DailySalesMap = salesData.getTransactionMap();
+	// 년, 월, 일에 대한 통계를 출력
+	private void printSalesStats(String type) {
+		TreeMap<String, Map<Integer, Integer>> salesStats = salesData.generateSalesMap(type);
 
-		System.out.println("=============== 키오스크 일별 판매 통계 ===============");
-		for(Entry<LocalDate, Map<Product, Integer>> entry : DailySalesMap.entrySet()) {
-			LocalDate date = entry.getKey();
-			int year = date.getYear();
-			int month = date.getMonthValue();
-			int day = date.getDayOfMonth();
-			Map<Product, Integer> productTotal = entry.getValue();
-		
-			System.out.println("[" + year + "년 " + month + "월 " + day + "일]");
-			System.out.println("-----------------------------------------------------");
-			printProductReport(productTotal);
-		}
-		
-		printSaveSalesReportToFile(DailySalesMap, "day");//파일 저장여부
-	}
-	
-	//월별로 출력
-	public void getMonthlyReport() {
-		Map<Integer, Map<Integer, Map<Product, Integer>>> monthlySalesMap = salesData.createMonthlySalesMap();
-		
-		System.out.println("=============== 키오스크 연도별 판매 통계 ===============");
-		
-		for(Map.Entry<Integer, Map<Integer, Map<Product, Integer>>> entry : monthlySalesMap.entrySet()) {
-			Map<Integer, Map<Product, Integer>> map = entry.getValue();
-			int year = entry.getKey();
-	
-	        System.out.println("[" + year + "년]");
-	        
-	        for(Map.Entry<Integer, Map<Product, Integer>> monthly : map.entrySet()) {
-	        	Map<Product, Integer> products = monthly.getValue();
-				int month = monthly.getKey();
-				System.out.println("[" + month + "월]");
-	        	System.out.println("-----------------------------------------------------");
-	        	printProductReport(products);
-	        }
-		}
-		
-		printSaveSalesReportToFile(monthlySalesMap, "month");//파일 저장여부
-	}
-	
-	//연도별 통계를 출력함
-	public void getYearReport() {
-		Map<Integer, Map<Product, Integer>> yearlySalesMap = salesData.createYearSalesMap();
-		
-		System.out.println("=============== 키오스크 연도별 판매 통계 ===============");
-		
-		for(Map.Entry<Integer, Map<Product, Integer>> entry : yearlySalesMap.entrySet()) {
-			Map<Product, Integer> products = entry.getValue();
-			int year = entry.getKey();
-	
-	        System.out.println("[" + year + "년]");
-	        System.out.println("-----------------------------------------------------");
-	        printProductReport(products);
-		}
-		
-		printSaveSalesReportToFile(yearlySalesMap, "year");//파일 저장여부
-	}
-	
-	
-	
-	//상품을 출력함
-	public void printProductReport(Map<Product, Integer> products) {
-		System.out.println("[상품명]\t\t[가격]\t\t[수량]\t\t[매출]");
-        System.out.println("-----------------------------------------------------");
+		String title = "";
+		String formatKey = "";
 
-        int totalCount = 0;
-        int totalSales = 0;
-        
-		for(Map.Entry<Product, Integer> value : products.entrySet()) {
-			Product name = value.getKey(); //음식명
-            int count = value.getValue();  //판매개수
-            int price = name.getPrice();   //가격
-            int sales = price * count;     //매출
-
-            System.out.printf("%-10s\t%,2d원\t%,10d개\t%,10d원\n", 
-                      name.getName(), price, count, sales);
-
-            totalCount += count;
-            totalSales += sales;
+		switch (type) {
+		case "YEAR":
+			title = "연도별 매출 통계";
+			formatKey = "%s년";
+			break;
+		case "MONTH":
+			title = "월별 매출 통계";
+			formatKey = "%s년 %s월";
+			break;
+		case "DAY":
+			title = "일별 매출 통계";
+			formatKey = "%s년 %s월 %s일";
+			break;
+		default:
+			throw new IllegalArgumentException("Invalid type: " + type);
 		}
-		System.out.println("-----------------------------------------------------");
-		System.out.printf("총 판매 개수: %d개\n", totalCount);
-		System.out.printf("총 매출: %d원\n\n", totalSales);
+
+		printDetailSalseStatus(salesStats, title, formatKey, type); // 통계 부분 출력
+		printSaveFileMenu(type, salesStats); // 파일 저장 여부 묻기
 	}
-	
-	
-	//파일 저장 여부 묻고, 저장하는 기능
-	public void printSaveSalesReportToFile(Map map, String str){
-		System.out.println();
-		
-		while(true) {
-			System.out.print("파일로 저장하시겠습니까(y, n)>> ");
+
+	//세부적으로 상품 통계를 출력(id, 상품명, 판매개수, 단가, 판매금액)
+	private void printDetailSalseStatus(TreeMap<String, Map<Integer, Integer>> salesStats, String title, String formatKey,
+			String type) {
+		System.out.println("------------ " + title + " -----------");
+
+		for (Map.Entry<String, Map<Integer, Integer>> entry : salesStats.entrySet()) {
+			String key = entry.getKey(); //날짜
+			Map<Integer, Integer> productSales = entry.getValue(); //해당 날짜에 상품과 판매개수
+
+			int totalQuantity = 0; //총 판매개수
+			int totalSalesAmount = 0; //총 매출
+
+			if (type.equals("DAY")) {
+				System.out.println("["
+						+ String.format(formatKey, key.substring(0, 4), key.substring(4, 6), key.substring(6)) + "]");
+			} else if (type.equals("MONTH")) {
+				System.out.println("[" + String.format(formatKey, key.substring(0, 4), key.substring(4, 6)) + "]");
+			} else {
+				System.out.println("[" + String.format(formatKey, key) + "]");
+			}
+
+			System.out.printf("    [상품 ID]       [상품명]       [판매 개수]       [단가]       [판매 금액]\n");
+			for (Map.Entry<Integer, Integer> productEntry : productSales.entrySet()) {
+				int productId = productEntry.getKey();//상품ID
+				int quantity = productEntry.getValue(); //판매개수
+
+				// Product 객체 가져와서 가격 및 이름 조회
+				Product product = salesData.getProductById(productId);
+				int price = (product != null) ? product.getPrice() : 0;
+				String productName = (product != null) ? product.getName() : "Unknown Product";
+
+				totalQuantity += quantity;
+				totalSalesAmount += price * quantity;
+
+				System.out.printf("   ▶%5d  %10s  %12d개  %12d원  %12d원\n", productId, productName,
+						quantity, price, price * quantity);
+			}
+
+			System.out.printf("   [총 판매 개수]: %d개\n", totalQuantity);
+			System.out.printf("   [총 매출 금액]: %d원\n", totalSalesAmount);
+			System.out.println("-------------------------------------");
+		}
+	}
+
+	//통계 파일저장 여부 메뉴
+	private void printSaveFileMenu(String type, TreeMap<String, Map<Integer, Integer>> salesStats) {
+		while (true) {
+			System.out.print("해당 정보를 저장하시겠습니까(y, n)>> ");
 			String input = sc.nextLine();
-			
+
 			switch (input) {
-				case "y":
-				case "Y": 
-					if(str.equals("year"))
-						salesDataManager.saveYearSalesReportToFile(map);
-					else if(str.equals("month"))
-						salesDataManager.saveMonthlySalesReportToFile(map);
-					else
-						salesDataManager.saveDailySalesReportToFile(map);
-					return;
-				case "n":
-				case "N": return;
-				default: System.out.println("잘못 입력하셨습니다");
+			case "y":
+			case "Y":
+				salesDataManager.saveFileToCSV(salesStats, type);
+				return;
+			case "n":
+			case "N":
+				System.out.println("저장이 취소되었습니다.");
+				return;
+			default:
+				System.out.println("잘못된 입력입니다.");
+				break;
 			}
 		}
-		
-	} 
-	
+	}
+
+	// 매출 조회 기능
+	public void viewSalesMenu() {
+		while (true) {
+			printSalesMenu();
+			String input = sc.nextLine();
+			System.out.println();
+
+			switch (input) {
+			case "1":
+				printSalesStats("YEAR");
+				break;
+			case "2":
+				printSalesStats("MONTH");
+				break;
+			case "3":
+				printSalesStats("DAY");
+				break;
+			case "4":
+				return;
+			default:
+				System.out.println("잘못된 입력입니다");
+			}
+		}
+
+	}
+
+	// 매출 조회 메뉴
+	private void printSalesMenu() {
+		System.out.println("------------매출 관리 화면-----------");
+		System.out.println("1. 년도별 매출 통계");
+		System.out.println("2. 월별 매출 통계");
+		System.out.println("3. 일별 매출 통계");
+		System.out.println("4. 나가기");
+		System.out.println("---------------------------------");
+		System.out.print("번호를 입력하세요 >> ");
+	}
 }

@@ -1,6 +1,7 @@
 package controller;
 
 import manager.CartManager;
+import manager.OrderManager;
 import manager.ProductManager;
 import manager.ProductSelector;
 import model.Cart;
@@ -15,6 +16,7 @@ public class MainController {
     private ProductManager productManager;
     private ProductSelector productSelector;
     private AdminController adminController;
+    private SalesDataController salesDataController;
 
     public MainController() {
         this.scanner = new Scanner(System.in);
@@ -22,7 +24,8 @@ public class MainController {
         this.productSelector = new ProductSelector(productManager);
         this.cartController = new CartController(productManager, productSelector, scanner);
         this.orderController = new OrderController(scanner);
-        this.adminController = new AdminController(orderController.getOrderManager(),productManager,scanner);
+        this.salesDataController = new SalesDataController(productManager, orderController.getOrderManager());
+        this.adminController = new AdminController(productManager, scanner, orderController, salesDataController);
     }
 
     public void start() {

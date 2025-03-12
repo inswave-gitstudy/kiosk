@@ -15,9 +15,10 @@ import model.Admin;
 
 public class AdminManager {
 	private Scanner sc;
-	private Admin admin;
-	private String salt;
+	private Admin admin; 
+	private String salt; //로그인시에 사용할 salt
 	
+	//생성자
 	public AdminManager() {
 		this.admin = new Admin();
 		this.sc = new Scanner(System.in);
@@ -64,12 +65,13 @@ public class AdminManager {
     	}
     }
     
+    //비밀번호 변경 세부조건 표시 기능
     private void printModifyPassword() {
     	System.out.println("\n****************비밀번호 변경 조건****************");
 		System.out.println("비밀번호는 공백은 없어야 하며, 7자리 ~ 12자리 사이여야 합니다");
 		System.out.println("또한 영문자, 숫자, 특수문자를 조합하여 작성해야 합니다\n");
     }
-    
+
     //비밀번호 수정시에 정규식으로 조건 체크하는 기능
     private boolean checkPassword(String str) {
 		String checkPassword = str.trim().replaceAll(" ", "");
@@ -88,6 +90,10 @@ public class AdminManager {
 		}
 		else if(!str.matches("^(?=.*[a-zA-Z])(?=.*[~!@#$%^&*+=()_-])(?=.*[0-9]).+$")) {//특수문자 사용
 			System.out.println("비밀번호는 영문자, 숫자, 특수문자를 조합하여 작성해야 합니다");
+			return false;
+		}
+		else if(str.matches(".*[ㄱ-ㅎㅏ-ㅣ가-힣]+.*")) {
+			System.out.println("비밀번호는 한글을 사용하면 안됩니다");
 			return false;
 		}
 		else if(!checkRepetition(str)) {//동일한 문자를 연속적으로 사용하는 것 ex) 111, aaa

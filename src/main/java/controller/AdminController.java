@@ -5,42 +5,35 @@ import java.util.Scanner;
 import manager.AdminManager;
 import manager.OrderManager;
 import manager.ProductManager;
+import manager.SalesDataManager;
 import model.Order;
 import model.Product;
 
 //관리자 메뉴 화면들 보여주는 곳
 public class AdminController {
-	Scanner sc;
-	private SalesDataController salesdata;
-	private AdminManager amdinManager;
-	private OrderManager orderManager;
+	private Scanner sc;
+	private AdminManager adminManager;
+	private OrderController orderController;
 	private ProductManager productManager;
+	private SalesDataController salesDataController;
 	
 	//생성자
-    public AdminController(OrderManager orderManager, ProductManager productManager, Scanner scanner) {
-        this.salesdata = new SalesDataController();
-        this.amdinManager = new AdminManager();
-        this.orderManager = orderManager;
+    public AdminController(ProductManager productManager, Scanner scanner, OrderController orderController, SalesDataController salesDataController) {
+    	this.orderController = orderController;
+        this.adminManager = new AdminManager();
         this.productManager = productManager;
         this.sc = scanner;
+        this.salesDataController = salesDataController;
     }
+
     
-  //생성자 테스트용
-    public AdminController(OrderManager order) {
-        this.salesdata = new SalesDataController();
-        this.amdinManager = new AdminManager();
-        this.productManager = new ProductManager();
-        this.orderManager = order;
-        this.sc = new Scanner(System.in);
-    }
-    
-    //로그인 테스트용
+    //로그인 메뉴
   	public void viewAdminLoginMenu() {
   		while(true) {
   			System.out.print("관리자 비밀번호를 입력하세요>> ");
   	  		String password = sc.nextLine().trim().replace(" ", "");
   	  		
-  	  		if(amdinManager.checkLoginCredentials(password)) {
+  	  		if(adminManager.checkLoginCredentials(password)) {
   	  			viewAdminMenu();
   	  			break;
   	  		}
@@ -50,7 +43,7 @@ public class AdminController {
   	}
     
     //관리자 메인 기능
-    public void viewAdminMenu() {
+    private void viewAdminMenu() {
     	while(true) {
     		printAdminMenu();
     		String input = sc.nextLine();
@@ -58,10 +51,10 @@ public class AdminController {
     		
     		switch(input) {
 	    		case "1": productManager.run(); break;
-	    		case "2": viewSalesMenu(); break;
+	    		case "2": salesDataController.viewSalesMenu(); break;
 	    		case "3": viewOrderMenu(); break;
-	    		case "4": amdinManager.modifyPassword(); break;
-	    		case "5": viewAdminLoginMenu();
+	    		case "4": adminManager.modifyPassword(); break;
+	    		case "5": return;
 	    		default: System.out.println("잘못된 입력입니다");
     		}
     	}
@@ -81,66 +74,6 @@ public class AdminController {
     }
    
     
-    //상품관리 기능
-//    private void viewFoodMenu() {
-//    	while(true) {
-//    		printFoodMenu();
-//    		String input = sc.nextLine();
-//    		System.out.println();
-//    		
-//    		switch(input) {
-//	    		case "1": System.out.println("상품추가"); break;
-//	    		case "2": System.out.println("상품삭제"); break;
-//	    		case "3": System.out.println("상품조회"); break;
-//	    		case "4": System.out.println("상품수정"); break;
-//	    		default: System.out.println("잘못된 입력입니다");
-//    		}
-//    	}
-//    }
-    
-    //상품관리 메뉴
-//    private void printFoodMenu() {
-//    	System.out.println("------------상품 관리 화면-----------");
-//    	System.out.println("1. 상품추가");
-//    	System.out.println("2. 상품삭제");
-//    	System.out.println("3. 상품조회");
-//    	System.out.println("4. 상품수정");
-//    	System.out.println("5. 나가기");
-//    	System.out.println("---------------------------------");
-//    	System.out.print("번호를 입력하세요 >> ");
-//    }
-//    
-    
-    //매출 조회 기능
-    private void viewSalesMenu() {
-    	while(true) {
-    		printSalesMenu();
-    		String input = sc.nextLine();
-    		System.out.println();
-    		
-    		switch(input) {
-	    		case "1": salesdata.getYearReport(); break;
-	    		case "2": salesdata.getMonthlyReport(); break;
-	    		case "3": salesdata.getDailyReport(); break;
-	    		case "4": viewAdminMenu();
-	    		default: System.out.println("잘못된 입력입니다");
-    		}
-    	}
-    	
-    }
-    
-    //매출 조회 메뉴
-    private void printSalesMenu() {
-    	System.out.println("------------매출 관리 화면-----------");
-    	System.out.println("1. 년도별 매출 통계");
-    	System.out.println("2. 월별 매출 통계");
-    	System.out.println("3. 일별 매출 통계");
-    	System.out.println("4. 나가기");
-    	System.out.println("---------------------------------");
-    	System.out.print("번호를 입력하세요 >> ");
-    }
-    
-    
    //주문 관리 기능
     private void viewOrderMenu() {
     	while(true) {
@@ -149,33 +82,16 @@ public class AdminController {
     		System.out.println();
     		
     		switch(input) {
-	    		case "1": printCancelOrder(); break;
-	    		case "2": PrintOrderList(orderManager.getAllOrder()); break;
-	    		case "3": PrintOrderList(orderManager.getPrePareOrder()); break;
+	    		case "1": //orderController.cancelOrder(input); 
+	    				break;
+	    		case "2": orderController.getAllOrder(); break;
+	    		case "3": orderController.displayPrepareOrder(); break;
 	    		case "4": viewAdminMenu();
 	    		default: System.out.println("잘못된 입력입니다");
     		}
     	}
     }
-
-    private void printCancelOrder() {//주문취소
-    	System.out.print("취소할 주문ID를 입력하세요>> ");
-    	int input = Integer.parseInt(sc.nextLine());
-    	
-    	if(orderManager.cancelOrder(input))
-    		System.out.println("주문이 취소되었습니다");
-    	else
-    		System.out.println("주문취소를 실패했습니다");
-    }
-    
-    private void PrintOrderList(Map<Integer, Order> orderMap) {//주문조회
-    	Map<Integer, Order> orders = orderMap;
-    	
-    	for(Map.Entry<Integer, Order> entry : orders.entrySet()) {
-    		System.out.println(entry.getValue());
-    	}
-    }
-    
+     
     
     //주문 관리 메뉴
     private void printOrderMenu() {
