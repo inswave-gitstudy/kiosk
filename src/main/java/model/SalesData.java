@@ -5,17 +5,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+import controller.OrderController;
 import manager.OrderManager;
 import manager.ProductManager;
 
 public class SalesData {
 	private Map<Integer, Product> productMap; //상품정보
-	private OrderManager orderManager;
+	private OrderController orderController;
 
 	//생성자
-	public SalesData(ProductManager productManager, OrderManager orderManager) {
+	public SalesData(ProductManager productManager, OrderController orderController) {
 		this.productMap = new HashMap<>();
-		this.orderManager = orderManager;
+		this.orderController = orderController;
 
 		//상품 맵
 		for (Product product : productManager.getAllProducts()) {
@@ -33,7 +34,7 @@ public class SalesData {
 		TreeMap<String, Map<Integer, Integer>> salesStats = new TreeMap<>();
 
 		// 모든 주문 가져오기
-		Map<Integer, Order> allOrders = orderManager.getAllOrder();
+		Map<Integer, Order> allOrders = orderController.loadOrderWithTxt();
 
 		for (Order order : allOrders.values()) {
 			LocalDateTime orderTime = order.getDateTime();
