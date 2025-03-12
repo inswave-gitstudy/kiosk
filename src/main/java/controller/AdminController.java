@@ -12,7 +12,7 @@ public class AdminController {
 	private OrderController orderController;
 	private ProductManager productManager;
 	private SalesDataController salesDataController;
-	private int count;
+	private int count; //비밀번호 오류횟수
 
 	// 생성자
 	public AdminController(ProductManager productManager, Scanner scanner, OrderController orderController,
@@ -27,7 +27,7 @@ public class AdminController {
 
 	// 로그인 메뉴
 	public void viewAdminLoginMenu() {
-		count = 0;
+		count = 0; //비밀번호 오류횟수 초기화
 
 		while (true) {
 			System.out.print("관리자 비밀번호를 입력하세요>> ");
