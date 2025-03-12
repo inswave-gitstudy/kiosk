@@ -6,7 +6,6 @@ import model.Order;
 import model.OrderStatus;
 import model.Product;
 import repository.ObjectOrderRepository;
-import repository.OrderRepository;
 import repository.TxtOrderRepository;
 
 import java.util.*;
@@ -20,34 +19,25 @@ import java.util.stream.IntStream;
 public class OrderManager {
     private Map<Integer, Order> orders; // 주문 목록 (주문번호 -> 주문)
     private int nextOrderId = 1; // 주문번호 증가를 위한 변수
-    private final OrderRepository objectRepository; // 모든 주문 저장소 (자바 객체)
-    private final OrderRepository txtRepository; // 완료된 주문 저장소 (텍스트 파일)
+    private final ObjectOrderRepository objectRepository; // 모든 주문 저장소 (자바 객체)
+    private final TxtOrderRepository txtRepository; // 완료된 주문 저장소 (텍스트 파일)
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1); // 자동 백업 스케줄러
 
     public OrderManager() {
         this.orders = new LinkedHashMap<>();
         this.objectRepository = new ObjectOrderRepository();
-        this.txtRepository = new TxtOrderRepository(null);
-        startBackupScheduler(); // 2시간마다 자동 백업 실행
+        this.txtRepository = new TxtOrderRepository();
     }
-
 
     // 주문 생성
     public void createOrder(Map<Product, Integer> cartItems) {
-        Order order = new Order(nextOrderId++, cartItems); // 주문 생성
-        orders.put(order.getOrderId(), order); // 주문 저장
-
+        Order order = new Order(nextOrderId++, cartItems);
+        orders.put(order.getOrderId(), order);
     }
 
-    // 주문 삭제 (파일 저장은 일정 시간마다 수행)
+    // 주문 삭제
     public Order removeOrder(int orderId) {
         return orders.remove(orderId);
-    }
-
-    // 주문 목록 초기화
-    private void clearOrder() {
-        nextOrderId = 1;
-        orders = new LinkedHashMap<>();
     }
 
     // 주문 저장
@@ -59,15 +49,10 @@ public class OrderManager {
     }
 
     // 완료된 주문만 필터링
-    public Map<Integer, Order> getCompletedOrders() {
+    private Map<Integer, Order> getCompletedOrders() {
         return orders.entrySet().stream()
             .filter(entry -> entry.getValue().getStatus() == OrderStatus.DONE)
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-    }
-
-    // 주문 조회 (주문번호로 찾기)
-    public Order getOrderById(int orderId) {
-        return orders.get(orderId);
     }
 
     // 주문 완료 처리
@@ -75,19 +60,9 @@ public class OrderManager {
         Order order = orders.get(orderId);
         if (order != null) {
             order.setStatus(OrderStatus.DONE);
-            flushOrder(); // 완료 즉시 저장
             return true;
         }
         return false;
-    }
-
-    // 주문 취소 처리
-    public boolean cancelOrder(int orderId) {
-        Order order = orders.get(orderId);
-        if (order != null) {
-            removeOrder(orderId);
-            return true;
-        } else return false;
     }
 
     // 모든 주문 조회
@@ -104,8 +79,13 @@ public class OrderManager {
         }
     }
 
+    // 주문 목록 로드 ( 텍스트 파일 )
+    public Map<Integer, Order> loadOrderWithTxt() {
+        return txtRepository.loadOrder();
+    }
+
     // 대기중인 주문만 조회
-    public Map<Integer, Order> getPrePareOrder() {
+    public Map<Integer, Order> getPrepareOrder() {
         Map<Integer, Order> prepareOrders = new HashMap<>();
         for (Map.Entry<Integer, Order> entry : orders.entrySet()) {
             if (!entry.getValue().getStatus().equals(OrderStatus.DONE)) {
@@ -115,27 +95,36 @@ public class OrderManager {
         return prepareOrders;
     }
 
-    // 카트에서 상품 불러오기
-    // 테스트 상품 추가
-    /*
-    public Map<Product, Integer> loadCartItem(Map<Product, Integer> cartItems) {
-        if (cartItems.isEmpty()) {
-            return null;
-        }
-        createOrder(cartItems);
-        Map<Product, Integer> testCartItems = new LinkedHashMap<>();
-        testCartItems.put(new Coffee(1, "아메리카노", 2500), 1);
-        testCartItems.put(new Coffee(2, "카페라떼", 2500), 2);
-        testCartItems.put(new Coffee(3, "콜드브루", 3000), 1);
-        testCartItems.put(new Coffee(4, "카푸치노", 3000), 2);
-        testCartItems.put(new Coffee(5, "카페모카", 3000), 4);
-        testCartItems.put(new Coffee(6, "바닐라라떼", 4000), 5);
-        testCartItems.put(new Coffee(7, "아인슈페너", 3000), 1);
-        return testCartItems;
+    // 2시간마다 자동 백업 스케줄러 실행 - scheduler
+    public void startBackupScheduler() {
+        scheduler.scheduleAtFixedRate(() -> {
+            System.out.println("[백업 시작] 주문 데이터를 저장합니다...");
+            flushOrder();
+            System.out.println("[백업 완료] 주문 데이터 저장 완료.");
+        }, 2, 2, TimeUnit.HOURS);
     }
-    */
 
-    // 랜덤 주문목록 생성
+    // 스케줄러 종료 - scheduler
+    public void shutdownScheduler() {
+        scheduler.shutdown();
+    }
+
+    // 가장 마지막 주문 조회 - order
+    public Order getLastOrder() {
+        return orders.get(Collections.max(orders.keySet()));
+    }
+
+    // 주문 영수증 저장
+    public void saveReceipt() {
+        Order lastOrder = getLastOrder();
+        if (lastOrder != null) {
+            txtRepository.saveReceipt(lastOrder);
+        }
+    }
+
+    // ==================================================================== 안쓰는기능, 테스트 데이터 추가 기능
+
+    // 랜덤 주문목록 생성 - order
     public void generateTestOrders(int count) {
         Random random = new Random();
         String[] beanTypes = {"에티오피아", "콜롬비아", "과테말라", "브라질", "케냐"}; // 원두 종류
@@ -165,17 +154,14 @@ public class OrderManager {
         return coffee;
     }
 
-    // 2시간마다 자동 백업 스케줄러 실행
-    private void startBackupScheduler() {
-        scheduler.scheduleAtFixedRate(() -> {
-            System.out.println("[백업 시작] 주문 데이터를 저장합니다...");
-            flushOrder();
-            System.out.println("[백업 완료] 모든 주문(객체) 및 완료된 주문(텍스트) 저장 완료.");
-        }, 0, 2, TimeUnit.HOURS);
+    // 주문 목록 초기화
+    public void clearOrder() {
+        nextOrderId = 1;
+        orders = new LinkedHashMap<>();
     }
 
-    // 프로그램 종료 시 스케줄러 종료
-    public void shutdownScheduler() {
-        scheduler.shutdown();
+    // 특정 주문 조회 (주문번호로 찾기) - order
+    public Order getOrderById(int orderId) {
+        return orders.get(orderId);
     }
 }

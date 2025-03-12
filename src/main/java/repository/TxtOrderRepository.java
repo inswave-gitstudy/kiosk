@@ -1,82 +1,64 @@
 package repository;
 
+import model.Coffee;
 import model.Order;
 import model.OrderStatus;
 import model.Product;
+import utils.FilePathUtil;
 
 import java.io.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+// 통계 기능을 위해 주문상태가 [완료]처리된 주문 목록만을 텍스트 파일로 관리하는 저장소
 public class TxtOrderRepository implements OrderRepository {
-    private static final String BASE_DIR = "orders/"; // 기본 저장 폴더
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    private String day;
 
-    public TxtOrderRepository(String day) {
-        this.day = day;
-    }
+    @Override
+    public void saveOrder(Map<Integer, Order> newOrders) {
+        // 기본 경로 설정
+        String baseDir = FilePathUtil.getBaseDirectory();
+        String filePath = baseDir + "orders.txt"; // orders.txt 파일을 기본 경로에 저장
 
-    // 완료된 주문을 저장 (덮어쓰기 모드로 변경)
-    public void saveOrder(Map<Integer, Order> orders) {
-        LocalDate today = LocalDate.now();
-        String yearDir = BASE_DIR + today.getYear() + "/";
-        String monthDir = yearDir + String.format("%02d", today.getMonthValue()) + "/";
-        String filePath = monthDir + String.format("%02d", today.getDayOfMonth()) + ".txt";
+        // 폴더가 존재하지 않으면 생성
+        FilePathUtil.createDirectoryIfNotExists(baseDir); // 폴더가 존재하지 않으면 생성
 
-        // 폴더 생성
-        File dir = new File(monthDir);
-        if (!dir.exists() && !dir.mkdirs()) {
-            System.out.println("폴더 생성 실패: " + monthDir);
-            return;
-        }
+        // 기존 주문 목록 불러오기
+        Map<Integer, Order> existingOrders = loadOrder();
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, false))) { // 덮어쓰기 모드
-            boolean hasCompletedOrders = false;
-            TreeMap<Integer, Order> sortedOrders = new TreeMap<>(orders);
+        // 새로운 주문 추가
+        existingOrders.putAll(newOrders);
 
+        // TreeMap 으로 변경하여 주문 번호 오름차순으로 정렬
+        Map<Integer, Order> sortedOrders = new TreeMap<>(existingOrders);
+
+        // 기존 데이터 + 새로운 데이터 다시 저장 (덮어쓰기)
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             for (Order order : sortedOrders.values()) {
-                if (order.getStatus() == OrderStatus.DONE) {
-                    writer.write(orderToTxt(order));
-                    writer.newLine();
-                    hasCompletedOrders = true;
-                }
+                writer.write(orderToTxt(order));
+                writer.newLine();
             }
-
-            if (!hasCompletedOrders) {
-                writer.write("완료된 주문이 없습니다.\n");
-            }
-
-            System.out.println("완료된 주문 저장됨: " + filePath);
+            System.out.println("주문 내역 저장 완료 (" + filePath + ")");
         } catch (IOException e) {
-            System.out.println("파일 저장 중 오류 발생: " + e.getMessage());
+            System.out.println("주문 내역 저장 오류: " + e.getMessage());
         }
     }
 
     @Override
     public Map<Integer, Order> loadOrder() {
-        Map<Integer, Order> orders = new LinkedHashMap<>();
-        LocalDate date;
+        Map<Integer, Order> orders = new TreeMap<>();
 
-        try {
-            date = LocalDate.parse(day, DateTimeFormatter.ofPattern("yyyy/MM/dd"));
-        } catch (Exception e) {
-            System.out.println("잘못된 날짜 형식: '" + day + "' (올바른 형식: YYYY/MM/DD)");
-            return orders;
-        }
-
-        String yearDir = BASE_DIR + date.getYear() + "/";
-        String monthDir = yearDir + String.format("%02d", date.getMonthValue()) + "/";
-        String filePath = monthDir + String.format("%02d", date.getDayOfMonth()) + ".txt";
+        // 파일 경로 설정
+        String filePath = FilePathUtil.getBaseDirectory() + "orders.txt"; // 고정된 orders.txt 파일
 
         File file = new File(filePath);
         if (!file.exists()) {
-            System.out.println(day + "의 주문 파일이 존재하지 않습니다.");
+            System.out.println("주문 파일이 존재하지 않습니다.");
             return orders;
         }
 
+        // 주문 파일을 읽어오기
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -91,6 +73,7 @@ public class TxtOrderRepository implements OrderRepository {
         return orders;
     }
 
+    // 객체 -> 문자열 파싱
     private String orderToTxt(Order order) {
         StringBuilder sb = new StringBuilder();
         sb.append(order.getOrderId()).append("|");
@@ -115,6 +98,7 @@ public class TxtOrderRepository implements OrderRepository {
         return sb.toString();
     }
 
+    // 문자열 -> 객체 파싱
     private Order txtToOrder(String line) {
         String[] splits = line.split("\\|");
         int orderId = Integer.parseInt(splits[0]);
@@ -133,4 +117,51 @@ public class TxtOrderRepository implements OrderRepository {
         }
         return new Order(orderId, products, status, dateTime);
     }
+
+    // 영수증 출력용 (단건 주문)
+    public void saveReceipt(Order order) {
+        String baseDir = FilePathUtil.getBaseDirectory();
+        String directoryPath = baseDir + "receipts/"; // 영수증 저장 폴더
+        String filePath = directoryPath + order.getOrderId() + "_receipt.txt"; // 주문번호_receipt.txt
+
+        // 폴더가 존재하지 않으면 생성
+        FilePathUtil.createDirectoryIfNotExists(directoryPath);  // 영수증 폴더가 존재하지 않으면 생성
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            // 영수증 포맷 유지
+            writer.write("\n========== [ 영수증 ] ==========\n");
+            writer.write(String.format("주문번호: %-10d | 주문일시: %s\n", order.getOrderId(), order.getDateTime()));
+            writer.write("---------------------------------\n");
+            writer.write(String.format("%-15s %-5s %10s\n", "상품명", "수량", "가격"));
+            writer.write("---------------------------------\n");
+
+            for (Map.Entry<Product, Integer> entry : order.getProducts().entrySet()) {
+                Product product = entry.getKey();
+                int quantity = entry.getValue();
+                int totalPrice = product.getPrice() * quantity;
+
+                // 기본 상품 출력
+                writer.write(String.format("%-15s %-5d %,10d원\n", product.getName(), quantity, totalPrice));
+
+                // 커피 옵션 추가
+                if (product instanceof Coffee) {
+                    Coffee coffee = (Coffee) product;
+                    writer.write(String.format("   [%s | %s | %s]\n",
+                        coffee.isDecaf() ? "디카페인" : "카페인",
+                        coffee.isIced() ? "아이스" : "핫",
+                        coffee.getBeanType()));
+                }
+            }
+
+            writer.write("---------------------------------\n");
+            writer.write(String.format("총 수량: %-10d | 총 가격: %,10d원\n", order.getTotalAmount(), order.getTotalPrice()));
+            writer.write(String.format("주문 상태: %s\n", order.getStatus().getStatus()));
+            writer.write("=================================\n");
+
+            System.out.println("영수증 저장 완료: " + filePath);
+        } catch (IOException e) {
+            System.out.println("영수증 저장 실패: " + e.getMessage());
+        }
+    }
+
 }
