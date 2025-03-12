@@ -48,8 +48,7 @@ public class MainController {
                     cartController.run();
                     break;
                 case 3:
-                    orderController.showAllOrders();
-                    orderController.showRecipe();
+                    // orderController.createOrder();
                     break;
                 case 4:
                     adminController.viewAdminLoginMenu();
@@ -57,7 +56,7 @@ public class MainController {
                 case 5:
                     System.out.println("프로그램 종료");
                     scanner.close();
-                    orderController.shutdownScheduler();
+                    orderController.close();
                     return;
                 default:
                     System.out.println("올바른 번호를 입력하세요.");
