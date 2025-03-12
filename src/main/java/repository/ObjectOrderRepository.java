@@ -21,6 +21,9 @@ public class ObjectOrderRepository implements OrderRepository {
         Map<Integer, Order> existingOrders = loadOrder(filePath);
         existingOrders.putAll(newOrders); // 새로운 주문 추가
 
+        // 폴더 없을 경우 생성 로직 추가
+        FilePathUtil.createDirectoryIfNotExists(baseDir);
+
         // 기존 데이터 + 새로운 데이터 다시 저장 (덮어쓰기)
         try (ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filePath)))) {
             out.writeObject(existingOrders);
@@ -42,14 +45,14 @@ public class ObjectOrderRepository implements OrderRepository {
     public Map<Integer, Order> loadOrder(String filePath) {
         File file = new File(filePath);
         if (!file.exists()) {
-            System.out.println("주문 내역 파일 없음, 새로 생성");
+            System.out.println("주문 내역 파일 없음");
             return new LinkedHashMap<>();
         }
 
         try (ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filePath)))) {
             return (Map<Integer, Order>) in.readObject();
         } catch (EOFException e) {
-            System.out.println("⚠ 주문 내역이 비어 있습니다.");
+            System.out.println("주문 내역이 비어 있습니다.");
         } catch (IOException | ClassNotFoundException e) {
             System.out.println("주문 내역 로드 오류: " + e.getMessage());
         }

@@ -19,7 +19,10 @@ public class OrderController {
         this.scanner = scanner;
         orderManager.loadOrder();
         orderManager.startBackupScheduler(); // 2시간마다 자동 백업 실행
-        orderManager.generateTestOrders(500);
+        orderManager.generateTestOrders(100);
+        for (int i = 0; i < 100; i++) {
+            orderManager.completeOrder(i);
+        }
     }
 
     // 주문 생성, 카트에서 목록 로딩 후 예외처리 추가
@@ -33,11 +36,12 @@ public class OrderController {
             displayMessage(entry.getKey().toString());
             displayMessage("수량: " + entry.getValue());
         }
-        displayMessage("위 내용대로 주문하시겠습니까?? (y/n)");
+        displayMessage("위 내용대로 주문하시겠습니까?? (1.이대로 주문 / 2. )");
         String input = scanner.nextLine();
         if (input.equalsIgnoreCase("y")) {
             orderManager.createOrder(cartItems);
             displayMessage("주문이 완료되었습니다.");
+            printReceipt();
         } else {
             displayMessage("메뉴로 화면으로 돌아갑니다.");
         }
@@ -115,7 +119,9 @@ public class OrderController {
         Order lastOrder = orderManager.getLastOrder();
         displayMessage(formatReceipt(lastOrder));
         // TODO 영수증 저장할건지 물어보고 저장하는 기능 추가
-        // saveReceipt();
+        displayMessage("영수증을 파일로 저장할까요? 1.저장 2. 필요없음");
+        int result = Integer.parseInt(scanner.nextLine());
+        if(result == 1) saveReceipt();
     }
 
     // 영수증 파일 저장
