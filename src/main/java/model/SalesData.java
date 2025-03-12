@@ -52,7 +52,59 @@ public class SalesData {
 				key = String.format("%04d%02d%02d", orderTime.getYear(), orderTime.getMonthValue(), orderTime.getDayOfMonth()); // YYYYMMDD
 				break;
 			default:
-				throw new IllegalArgumentException("Invalid type: " + type);
+				throw new IllegalArgumentException("[통계]잘못된 날짜 타입: " + type);
+			}
+
+			//putIfAbsent란 해당 키값이 없을 때 value 값을 넣어줌
+			salesStats.putIfAbsent(key, new HashMap<>());
+			Map<Integer, Integer> productSales = salesStats.get(key);
+
+			// 주문된 상품 리스트 가져오기
+			for (Map.Entry<Product, Integer> entry : order.getProducts().entrySet()) {
+				int productId = entry.getKey().getProductId(); // Product ID
+				int quantity = entry.getValue(); // 판매 개수
+
+				// 상품 판매 개수 업데이트
+				productSales.put(productId, productSales.getOrDefault(productId, 0) + quantity);
+			}
+		}
+
+		return salesStats;//해당 맵을 리턴함
+	}
+	
+	
+	
+	public TreeMap<String, Map<Integer, Integer>> generateSalesMap(String type, String startDate, String endDate) {
+		TreeMap<String, Map<Integer, Integer>> salesStats = new TreeMap<>();
+
+		// 모든 주문 가져오기
+		Map<Integer, Order> allOrders = orderController.loadOrderWithTxt();
+
+		for (Order order : allOrders.values()) {
+			LocalDateTime orderTime = order.getDateTime();
+			
+			if(orderTime.getYear() < Integer.parseInt(startDate.substring(0,4))  || orderTime.getYear() > Integer.parseInt(endDate.substring(0,4)))
+				continue;
+			else if(orderTime.getMonthValue() < Integer.parseInt(startDate.substring(4,6)) || orderTime.getMonthValue() > Integer.parseInt(endDate.substring(0,4)))
+				continue;
+			else if(orderTime.getDayOfMonth() < Integer.parseInt(startDate.substring(6)) || orderTime.getDayOfMonth() > Integer.parseInt(endDate.substring(6)))
+				continue;
+			
+			String key = "";
+
+			// 통계 유형별 키 생성 (연도별, 월별, 일별)
+			switch (type) {
+			case "YEAR":
+				key = String.format("%04d", orderTime.getYear()); // YYYY
+				break;
+			case "MONTH":
+				key = String.format("%04d%02d", orderTime.getYear(), orderTime.getMonthValue()); // YYYYMM
+				break;
+			case "DAY":
+				key = String.format("%04d%02d%02d", orderTime.getYear(), orderTime.getMonthValue(), orderTime.getDayOfMonth()); // YYYYMMDD
+				break;
+			default:
+				throw new IllegalArgumentException("[통계]잘못된 날짜 타입: " + type);
 			}
 
 			//putIfAbsent란 해당 키값이 없을 때 value 값을 넣어줌
