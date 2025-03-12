@@ -82,10 +82,9 @@ public class AdminController {
     		System.out.println();
     		
     		switch(input) {
-	    		case "1": //orderController.cancelOrder(input); 
-	    				break;
+	    		case "1": orderController.cancelOrder(); break;
 	    		case "2": orderController.getAllOrder(); break;
-	    		case "3": orderController.displayPrepareOrder(); break;
+	    		case "3": orderController.getPrepareOrder(); break;
 	    		case "4": viewAdminMenu();
 	    		default: System.out.println("잘못된 입력입니다");
     		}
