@@ -9,7 +9,7 @@ import manager.OrderManager;
 import manager.ProductManager;
 
 public class SalesData {
-	private Map<Integer, Product> productMap;
+	private Map<Integer, Product> productMap; //상품정보
 	private OrderManager orderManager;
 
 	//생성자

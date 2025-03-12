@@ -15,9 +15,10 @@ import model.Admin;
 
 public class AdminManager {
 	private Scanner sc;
-	private Admin admin;
-	private String salt;
+	private Admin admin; 
+	private String salt; //로그인시에 사용할 salt
 	
+	//생성자
 	public AdminManager() {
 		this.admin = new Admin();
 		this.sc = new Scanner(System.in);
@@ -64,6 +65,7 @@ public class AdminManager {
     	}
     }
     
+    //비밀번호 변경 세부조건 표시 기능
     private void printModifyPassword() {
     	System.out.println("\n****************비밀번호 변경 조건****************");
 		System.out.println("비밀번호는 공백은 없어야 하며, 7자리 ~ 12자리 사이여야 합니다");

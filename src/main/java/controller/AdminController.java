@@ -11,8 +11,8 @@ import model.Product;
 
 //관리자 메뉴 화면들 보여주는 곳
 public class AdminController {
-	Scanner sc;
-	private AdminManager amdinManager;
+	private Scanner sc;
+	private AdminManager adminManager;
 	private OrderController orderController;
 	private ProductManager productManager;
 	private SalesDataController salesDataController;
@@ -20,21 +20,20 @@ public class AdminController {
 	//생성자
     public AdminController(ProductManager productManager, Scanner scanner, OrderController orderController, SalesDataController salesDataController) {
     	this.orderController = orderController;
-        this.amdinManager = new AdminManager();
+        this.adminManager = new AdminManager();
         this.productManager = productManager;
         this.sc = scanner;
         this.salesDataController = salesDataController;
     }
-    
 
     
-    //로그인 테스트용
+    //로그인 메뉴
   	public void viewAdminLoginMenu() {
   		while(true) {
   			System.out.print("관리자 비밀번호를 입력하세요>> ");
   	  		String password = sc.nextLine().trim().replace(" ", "");
   	  		
-  	  		if(amdinManager.checkLoginCredentials(password)) {
+  	  		if(adminManager.checkLoginCredentials(password)) {
   	  			viewAdminMenu();
   	  			break;
   	  		}
@@ -44,7 +43,7 @@ public class AdminController {
   	}
     
     //관리자 메인 기능
-    public void viewAdminMenu() {
+    private void viewAdminMenu() {
     	while(true) {
     		printAdminMenu();
     		String input = sc.nextLine();
@@ -54,7 +53,7 @@ public class AdminController {
 	    		case "1": productManager.run(); break;
 	    		case "2": salesDataController.viewSalesMenu(); break;
 	    		case "3": viewOrderMenu(); break;
-	    		case "4": amdinManager.modifyPassword(); break;
+	    		case "4": adminManager.modifyPassword(); break;
 	    		case "5": return;
 	    		default: System.out.println("잘못된 입력입니다");
     		}
@@ -92,10 +91,7 @@ public class AdminController {
     		}
     	}
     }
-    
-    //주문취소
-    
-    
+     
     
     //주문 관리 메뉴
     private void printOrderMenu() {
