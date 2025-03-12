@@ -39,6 +39,10 @@ public class CartManager {
 		return cart.calTotalPrice();
 	}
 	
+	public Map<Product, Integer> getCartItems(){
+		return cart.getCartItems();
+	}
+	
 	
 	
 	
