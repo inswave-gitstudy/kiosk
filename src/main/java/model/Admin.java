@@ -3,22 +3,19 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
-import manager.AdminManager;
 import utils.FilePathUtil;
 
 public class Admin {
     private String password;//관리자 비밀번호
-    private FilePathUtil filePathUtil;
 
     //생성자
     public Admin() {
         this.password = passwordLoad();
-        this.filePathUtil = new FilePathUtil();
     } 
     
     //비밀번호 로드하는 기능 //초기 비번 admin74
     private String passwordLoad() {
-    	File file = new File(filePathUtil.getBaseDirectory()+"AdminPassword.txt");
+    	File file = new File(FilePathUtil.getBaseDirectory()+"AdminPassword.txt");
     	FileReader fr = null;
 		BufferedReader br = null;
 		String password = "";

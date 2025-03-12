@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
 
-import manager.OrderManager;
 import manager.ProductManager;
 import manager.SalesDataManager;
 import model.Product;
@@ -24,7 +23,7 @@ public class SalesDataController {
 
 	// 년, 월, 일에 대한 통계를 출력
 	private void printSalesStats(String type) {
-		TreeMap<String, Map<Integer, Integer>> salesStats = salesData.generateSalesMap(type);
+		TreeMap<String, Map<Integer, Integer>> salesStats = salesData.generateSalesMap(type);// 날짜(년, 월, 일), id값, 판매개수
 
 		String title = "";
 		String formatKey = "";
@@ -50,17 +49,17 @@ public class SalesDataController {
 		printSaveFileMenu(type, salesStats); // 파일 저장 여부 묻기
 	}
 
-	//세부적으로 상품 통계를 출력(id, 상품명, 판매개수, 단가, 판매금액)
-	private void printDetailSalseStatus(TreeMap<String, Map<Integer, Integer>> salesStats, String title, String formatKey,
-			String type) {
+	// 세부적으로 상품 통계를 출력(id, 상품명, 판매개수, 단가, 판매금액)
+	private void printDetailSalseStatus(TreeMap<String, Map<Integer, Integer>> salesStats, String title,
+			String formatKey, String type) {
 		System.out.println("------------ " + title + " -----------");
 
 		for (Map.Entry<String, Map<Integer, Integer>> entry : salesStats.entrySet()) {
-			String key = entry.getKey(); //날짜
-			Map<Integer, Integer> productSales = entry.getValue(); //해당 날짜에 상품과 판매개수
+			String key = entry.getKey(); // 날짜
+			Map<Integer, Integer> productSales = entry.getValue(); // 해당 날짜에 상품과 판매개수
 
-			int totalQuantity = 0; //총 판매개수
-			int totalSalesAmount = 0; //총 매출
+			int totalQuantity = 0; // 총 판매개수
+			int totalSalesAmount = 0; // 총 매출
 
 			if (type.equals("DAY")) {
 				System.out.println("["
@@ -73,8 +72,8 @@ public class SalesDataController {
 
 			System.out.printf("    [상품 ID]       [상품명]       [판매 개수]       [단가]       [판매 금액]\n");
 			for (Map.Entry<Integer, Integer> productEntry : productSales.entrySet()) {
-				int productId = productEntry.getKey();//상품ID
-				int quantity = productEntry.getValue(); //판매개수
+				int productId = productEntry.getKey();// 상품ID
+				int quantity = productEntry.getValue(); // 판매개수
 
 				// Product 객체 가져와서 가격 및 이름 조회
 				Product product = salesData.getProductById(productId);
@@ -84,8 +83,8 @@ public class SalesDataController {
 				totalQuantity += quantity;
 				totalSalesAmount += price * quantity;
 
-				System.out.printf("   ▶%5d  %10s  %12d개  %12d원  %12d원\n", productId, productName,
-						quantity, price, price * quantity);
+				System.out.printf("   ▶%5d  %10s  %12d개  %12d원  %12d원\n", productId, productName, quantity, price,
+						price * quantity);
 			}
 
 			System.out.printf("   [총 판매 개수]: %d개\n", totalQuantity);
@@ -94,7 +93,7 @@ public class SalesDataController {
 		}
 	}
 
-	//통계 파일저장 여부 메뉴
+	// 통계 파일저장 여부 메뉴
 	private void printSaveFileMenu(String type, TreeMap<String, Map<Integer, Integer>> salesStats) {
 		while (true) {
 			System.out.print("해당 정보를 저장하시겠습니까(y, n)>> ");
@@ -119,7 +118,7 @@ public class SalesDataController {
 	// 매출 조회 기능
 	public void viewSalesMenu() {
 		while (true) {
-			printSalesMenu();
+			printSalesMenu(); //매출 조회 메뉴 출력
 			String input = sc.nextLine().trim();
 			System.out.println();
 
@@ -139,7 +138,6 @@ public class SalesDataController {
 				System.out.println("잘못된 입력입니다");
 			}
 		}
-
 	}
 
 	// 매출 조회 메뉴

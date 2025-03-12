@@ -18,14 +18,12 @@ public class AdminManager {
 	private Scanner sc;
 	private Admin admin; 
 	private String salt; //로그인시에 사용할 salt
-	private FilePathUtil filePathUtil;
 	
 	//생성자
 	public AdminManager() {
 		this.admin = new Admin();
 		this.sc = new Scanner(System.in);
 		this.salt = saltLoad();
-		this.filePathUtil = new FilePathUtil();
 		
 		if(admin.getPassword() == null) {
 			initializePassword("admin74");
@@ -34,7 +32,7 @@ public class AdminManager {
 	
 	//로그인 기능
     public boolean checkLoginCredentials(String inputPassword) {	
-        String hashPassword = encryptPassword(inputPassword, this.salt);
+        String hashPassword = encryptPassword(inputPassword.trim(), this.salt);
   
         if(hashPassword.equals(admin.getPassword()))
         	return true;
@@ -44,18 +42,25 @@ public class AdminManager {
 
     //비밀번호 수정하는 기능
     public void modifyPassword() {
-    	System.out.print("현재 비밀번호를 입력하세요>> ");
-    	String password = sc.nextLine();
+    	System.out.print("현재 비밀번호를 입력하세요(취소: n)>> ");
+    	String password = sc.nextLine().trim();
     	
-    	if(checkLoginCredentials(password)) {
-    		printModifyPassword();
+    	if(password.equals("n") || password.equals("N")) {
+    		return;
+    	}
+    	else if(checkLoginCredentials(password)) {
+    		printModifyPassword(); //비밀번호 조건메뉴 표시
+    		
     		while(true) {
-    			System.out.print("새로운 비밀번호를 입력하세요>> ");
-            	password = sc.nextLine();
+    			System.out.print("새로운 비밀번호를 입력하세요(취소: n)>> ");
+            	password = sc.nextLine().trim();
             	
-    			if(checkPassword(password.trim())) {
+            	if(password.equals("n") || password.equals("N")) {
+            		break;
+            	}
+            	else if(checkPassword(password)) {
     				String salt = generateSalt();
-    				String newHashPassword = encryptPassword(password.trim(), salt);
+    				String newHashPassword = encryptPassword(password, salt);
     	        	savePasswordFile(newHashPassword, salt); //비밀번호를 암호화후에 파일에 저장
     	        	admin.setPassword(newHashPassword);//Admin 클래스에 있는 비밀번호를 새로운 비밀번호로 수정
     	        	
@@ -159,11 +164,11 @@ public class AdminManager {
     
     // 암호화된 비밀번호를 파일에 저장
     private void savePasswordFile(String password, String salt) {
-    	String FileName = filePathUtil.getBaseDirectory() + "AdminPassword.txt";
+    	String FileName = FilePathUtil.getBaseDirectory() + "AdminPassword.txt";
     	FileWriter fw = null;
     	BufferedWriter bw = null;
     	
-    	String FileName2 = filePathUtil.getBaseDirectory() + "Salt.txt";
+    	String FileName2 = FilePathUtil.getBaseDirectory() + "Salt.txt";
     	FileWriter fw2 = null;
     	BufferedWriter bw2 = null;
     	
@@ -210,7 +215,7 @@ public class AdminManager {
 
     //salt를 로드해서 저장하는 기능
     private String saltLoad() {
-    	File file = new File(filePathUtil.getBaseDirectory()+"Salt.txt");
+    	File file = new File(FilePathUtil.getBaseDirectory()+"Salt.txt");
     	FileReader fr = null;
 		BufferedReader br = null;
 		String salt = "";
@@ -236,7 +241,5 @@ public class AdminManager {
 		}
     	return salt; //파일에 저장되어있는 암호화된 Salt를 리턴
     }
-    
-    
- 
+
 }

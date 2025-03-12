@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import controller.OrderController;
-import manager.OrderManager;
 import manager.ProductManager;
 
 public class SalesData {
