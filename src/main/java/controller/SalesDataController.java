@@ -13,12 +13,14 @@ public class SalesDataController {
 	private Scanner sc;
 	private SalesDataManager salesDataManager;
 	private SalesData salesData;
+	private BestSellerProductController bestSellerProductController;
 
 	// 생성자
 	public SalesDataController(ProductManager productManager, OrderController orderController) {
 		this.salesData = new SalesData(productManager, orderController);
 		this.salesDataManager = new SalesDataManager(this.salesData);
 		this.sc = new Scanner(System.in);
+		this.bestSellerProductController = new BestSellerProductController(orderController);
 	}
 
 	// 년, 월, 일에 대한 통계를 출력
@@ -133,6 +135,15 @@ public class SalesDataController {
 				printSalesStats("DAY");
 				break;
 			case "4":
+				this.bestSellerProductController.showRank();
+				break;
+			case "5" :
+				this.bestSellerProductController.showBestProduct();
+				break;
+			case "6" :
+				this.bestSellerProductController.showWorstProduct();
+				break;
+			case "7" :
 				return;
 			default:
 				System.out.println("잘못된 입력입니다");
@@ -146,7 +157,10 @@ public class SalesDataController {
 		System.out.println("1. 년도별 매출 통계");
 		System.out.println("2. 월별 매출 통계");
 		System.out.println("3. 일별 매출 통계");
-		System.out.println("4. 나가기");
+		System.out.println("4. 판매량 순위 통계");
+		System.out.println("5. 가장 많이 팔린 상품 보기");
+		System.out.println("6. 가장 적게 팔린 상품 보기");
+		System.out.println("7. 나가기");
 		System.out.println("---------------------------------");
 		System.out.print("번호를 입력하세요 >> ");
 	}
