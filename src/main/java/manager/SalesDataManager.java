@@ -57,14 +57,14 @@ public class SalesDataManager {
 				Map<Integer, Integer> productSales = entry.getValue(); //id값 , 판매개수
 
 				for (Map.Entry<Integer, Integer> productEntry : productSales.entrySet()) {
-					int productId = productEntry.getKey();
-					int quantity = productEntry.getValue();
+					int productId = productEntry.getKey(); //상품ID
+					int quantity = productEntry.getValue(); //판매개수
 
 					// Product 객체 가져와서 가격 및 이름 조회
 					Product product = salesData.getProductById(productId);
 					int price = (product != null) ? product.getPrice() : 0;
-					String productName = (product != null) ? product.getName() : "Unknown Product";
-					int salesAmount = price * quantity;
+					String productName = (product != null) ? product.getName() : "알수없음";
+					int salesAmount = price * quantity; //총 판매금액
 
 					// CSV 파일에 데이터 기록
 					bufferedWriter.write(String.format("%s,%d,%s,%d,%d,%d\n", date, productId, productName, quantity, price,

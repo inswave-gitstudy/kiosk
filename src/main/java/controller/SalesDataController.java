@@ -43,10 +43,10 @@ public class SalesDataController {
 			formatKey = "%s년 %s월 %s일";
 			break;
 		default:
-			throw new IllegalArgumentException("Invalid type: " + type);
+			throw new IllegalArgumentException("알수 없는 날짜 타입: " + type);
 		}
 
-		printDetailSalseStatus(salesStats, title, formatKey, type); // 통계 부분 출력
+		printDetailSalseStatus(salesStats, title, formatKey, type); // 통계 부분 출력 / 날짜 맵, 타이틀, 날짜 포맷 형식, 타입
 		printSaveFileMenu(type, salesStats); // 파일 저장 여부 묻기
 	}
 
@@ -98,7 +98,7 @@ public class SalesDataController {
 	private void printSaveFileMenu(String type, TreeMap<String, Map<Integer, Integer>> salesStats) {
 		while (true) {
 			System.out.print("해당 정보를 저장하시겠습니까(y, n)>> ");
-			String input = sc.nextLine();
+			String input = sc.nextLine().trim();
 
 			switch (input) {
 			case "y":
@@ -120,7 +120,7 @@ public class SalesDataController {
 	public void viewSalesMenu() {
 		while (true) {
 			printSalesMenu();
-			String input = sc.nextLine();
+			String input = sc.nextLine().trim();
 			System.out.println();
 
 			switch (input) {
