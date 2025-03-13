@@ -104,15 +104,18 @@ public class AdminController {
 				orderController.cancelOrder();
 				break;
 			case "2":
-				orderController.getAllOrder();
+				//주문조회
 				break;
 			case "3":
-				orderController.getPrepareOrder();
+				orderController.getAllOrder();
 				break;
 			case "4":
-				orderController.completeOrder();
+				orderController.getPrepareOrder();
 				break;
 			case "5":
+				orderController.completeOrder();
+				break;
+			case "6":
 				return;
 			default:
 				System.out.println("잘못된 입력입니다");
@@ -125,9 +128,10 @@ public class AdminController {
 		System.out.println("------------매출 관리 화면-----------");
 		System.out.println("1. 주문취소");
 		System.out.println("2. 주문조회");
-		System.out.println("3. 주문목록");
-		System.out.println("4. 주문완료");
-		System.out.println("5. 나가기");
+		System.out.println("3. 전체주문내역");
+		System.out.println("4. 진행중인 주문 목록");
+		System.out.println("5. 주문완료");
+		System.out.println("6. 나가기");
 		System.out.println("---------------------------------");
 		System.out.print("번호를 입력하세요 >> ");
 	}
