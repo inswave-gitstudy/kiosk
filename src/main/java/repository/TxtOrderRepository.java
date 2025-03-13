@@ -119,6 +119,7 @@ public class TxtOrderRepository implements OrderRepository {
     }
 
     // 영수증 출력용 (단건 주문)
+    @Override
     public void saveReceipt(Order order) {
         String baseDir = FilePathUtil.getBaseDirectory();
         String directoryPath = baseDir + "receipts/"; // 영수증 저장 폴더

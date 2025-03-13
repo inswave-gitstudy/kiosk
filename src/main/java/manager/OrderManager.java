@@ -5,13 +5,14 @@ import model.Coffee;
 import model.Order;
 import model.OrderStatus;
 import model.Product;
-import repository.ObjectOrderRepository;
-import repository.TxtOrderRepository;
+import repository.OrderRepository;
+import repository.RepositoryFactory;
 
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -19,32 +20,43 @@ import java.util.stream.IntStream;
 public class OrderManager {
     private Map<Integer, Order> orders; // 주문 목록 (주문번호 -> 주문)
     private int nextOrderId = 1; // 주문번호 증가를 위한 변수
-    private final ObjectOrderRepository objectRepository; // 모든 주문 저장소 (자바 객체)
-    private final TxtOrderRepository txtRepository; // 완료된 주문 저장소 (텍스트 파일)
+    private final OrderRepository objectRepository;
+    private final OrderRepository txtRepository;
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1); // 자동 백업 스케줄러
+    private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();  // 읽기-쓰기 락
 
     public OrderManager() {
         this.orders = new LinkedHashMap<>();
-        this.objectRepository = new ObjectOrderRepository();
-        this.txtRepository = new TxtOrderRepository();
+        this.objectRepository = RepositoryFactory.getRepository("object");
+        this.txtRepository = RepositoryFactory.getRepository("txt");
     }
 
     // 주문 생성
     public void createOrder(Map<Product, Integer> cartItems) {
+        lock.writeLock().lock();  // 쓰기 락을 걸어 주문 수정이 끝날 때까지 기다림
         Order order = new Order(nextOrderId++, cartItems);
         orders.put(order.getOrderId(), order);
+        lock.writeLock().unlock();
     }
 
     // 주문 삭제
     public Order removeOrder(int orderId) {
-        return orders.remove(orderId);
+        lock.writeLock().lock();
+        Order remove = orders.remove(orderId);
+        lock.writeLock().unlock();
+        return remove;
     }
 
     // 주문 저장
     public void flushOrder() {
-        if (!orders.isEmpty()) {  // 저장할 주문이 있을 때만 수행
-            objectRepository.saveOrder(orders); // 모든 주문 저장 (객체)
-            txtRepository.saveOrder(getCompletedOrders()); // 완료된 주문 저장 (텍스트)
+        lock.readLock().lock();
+        try {
+            if (!orders.isEmpty()) {  // 저장할 주문이 있을 때만 수행
+                objectRepository.saveOrder(orders);  // 모든 주문 저장 (객체)
+                txtRepository.saveOrder(getCompletedOrders());  // 완료된 주문 저장 (텍스트)
+            }
+        } finally {
+            lock.readLock().unlock();
         }
     }
 
@@ -57,12 +69,17 @@ public class OrderManager {
 
     // 주문 완료 처리
     public boolean completeOrder(int orderId) {
-        Order order = orders.get(orderId);
-        if (order != null) {
-            order.setStatus(OrderStatus.DONE);
-            return true;
+        lock.writeLock().lock();
+        try {
+            Order order = orders.get(orderId);
+            if (order != null) {
+                order.setStatus(OrderStatus.DONE);
+                return true;
+            }
+            return false;
+        } finally {
+            lock.writeLock().unlock();
         }
-        return false;
     }
 
     // 모든 주문 조회
@@ -94,6 +111,14 @@ public class OrderManager {
         }
         return prepareOrders;
     }
+
+    // 최근 10건 주문 가져오기
+    public List<Order> getRecentOrder() {
+        int size = orders.size();
+        int startIndex = size >= 10 ? size - 10 : 0;
+        return new ArrayList<>(orders.values()).subList(startIndex, size);
+    }
+
 
     // 2시간마다 자동 백업 스케줄러 실행 - scheduler
     public void startBackupScheduler() {
