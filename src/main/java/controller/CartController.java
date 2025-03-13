@@ -150,7 +150,7 @@ public class CartController {
         Product productToChange = selectProductFromList(matchingProducts);
         if (productToChange == null) return;
 
-        System.out.println("새로운 수량을 입력하세요:");
+        System.out.print("새로운 수량을 입력하세요: ");
         int newQuantity = Integer.parseInt(scanner.nextLine());
 
         cartManager.updateQuantity(productToChange, newQuantity);
