@@ -83,12 +83,14 @@ public class SalesData {
 		for (Order order : allOrders.values()) {
 			LocalDateTime orderTime = order.getDateTime();
 			
-			if(orderTime.getYear() < Integer.parseInt(startDate.substring(0,4))  || orderTime.getYear() > Integer.parseInt(endDate.substring(0,4)))
-				continue;
-			else if(orderTime.getMonthValue() < Integer.parseInt(startDate.substring(4,6)) || orderTime.getMonthValue() > Integer.parseInt(endDate.substring(0,4)))
-				continue;
-			else if(orderTime.getDayOfMonth() < Integer.parseInt(startDate.substring(6)) || orderTime.getDayOfMonth() > Integer.parseInt(endDate.substring(6)))
-				continue;
+			// startDate와 endDate를 LocalDateTime으로 변환
+			LocalDateTime start = LocalDateTime.parse(startDate.substring(0, 4) + "-" + startDate.substring(4, 6) + "-" + startDate.substring(6) + "T00:00:00");
+			LocalDateTime end = LocalDateTime.parse(endDate.substring(0, 4) + "-" + endDate.substring(4, 6) + "-" + endDate.substring(6) + "T23:59:59");
+
+			// orderTime이 start와 end 사이에 있는지 확인
+			if (orderTime.isBefore(start) || orderTime.isAfter(end)) {
+			    continue; // 범위 밖이면 continue
+			}
 			
 			String key = "";
 
