@@ -25,9 +25,18 @@ public class BestSellerProductManager{
 	// txt 파일을 불러와서 정보를 읽고 , 판매량순으로 정렬하고 bestSellerProduct 의 products에 set..
 	public void rank(){
 		
-		// 주문 완료 처된 order.txt 파일에서 주문 목록을 불러옴.
 		Map<Integer, Order> orders = new TreeMap<>();
-		orders = orderController.loadOrderWithTxt();
+		
+		// 주문 완료 처된 order.txt 파일에서 주문 목록을 불러옴.
+		try {
+			orders = orderController.loadOrderWithTxt();
+			if(orders.isEmpty()) {
+				return;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return;
+		}
 		
 		// 각 상품의 판매량을 담을 Map
 		Map<Product, Integer> eachProductSales = new HashMap<>();

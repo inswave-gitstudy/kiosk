@@ -30,7 +30,7 @@ public class BestSellerProductController {
 	
 	// 전체 판매 순위(랭크) 보여주기
 	public void showRank() {
-		if(this.bestSellerProductManager.getRank() == null) {
+		if(this.bestSellerProductManager.getRank() == null || this.bestSellerProductManager.getRank().isEmpty()) {
 			System.out.println("주문 완료된 주문 목록이 없습니다..!");
 			return;
 		}
@@ -45,7 +45,7 @@ public class BestSellerProductController {
 	
 	// 가장 많이 팔린 상품 보여주기
 	public void showBestProduct() {
-		if(this.bestSellerProductManager.getRank() == null) {
+		if(this.bestSellerProductManager.getRank() == null || this.bestSellerProductManager.getRank().isEmpty()) {
 			System.out.println("주문 완료된 주문 목록이 없습니다..!");
 			return;
 		}
@@ -58,7 +58,7 @@ public class BestSellerProductController {
 	
 	// 가장 적게 팔린 상품 보여주기
 	public void showWorstProduct() {
-		if(this.bestSellerProductManager.getRank() == null) {
+		if(this.bestSellerProductManager.getRank() == null || this.bestSellerProductManager.getRank().isEmpty()) {
 			System.out.println("주문 완료된 주문 목록이 없습니다..!");
 			return;
 		}
