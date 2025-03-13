@@ -23,10 +23,11 @@ public class OrderController {
         this.scanner = scanner;
         orderManager.loadOrder();
         orderManager.startBackupScheduler(); // 2시간마다 자동 백업 실행
-        // orderManager.generateTestOrders(100);
-        // for (int i = 0; i < 100; i++) {
+        // orderManager.generateTestOrders(10);
+        // for (int i = 0; i <= 10; i++) {
         //     orderManager.completeOrder(i);
         // }
+        // System.out.println(orderManager.getOrders().size());
     }
 
     // 주문 생성, 카트에서 목록 로딩 후 예외처리 추가
@@ -66,6 +67,7 @@ public class OrderController {
         displayMessage("📝 조회할 주문 ID 를 입력하세요: ");
         int orderId = Integer.parseInt(scanner.nextLine());
         Order order = orderManager.getOrderById(orderId);
+        if(order == null) displayMessage("❌ 존재하지 않는 주문번호 입니다.");
         displayOrderDetails(order);
     }
 
