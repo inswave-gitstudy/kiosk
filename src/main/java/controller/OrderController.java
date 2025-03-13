@@ -61,6 +61,14 @@ public class OrderController {
         }
     }
 
+    // 특정 아이디로 조회
+    public void getOrderById(){
+        displayMessage("📝 조회할 주문 ID 를 입력하세요: ");
+        int orderId = Integer.parseInt(scanner.nextLine());
+        Order order = orderManager.getOrderById(orderId);
+        displayOrderDetails(order);
+    }
+
     // 주문 완료
     public void completeOrder() {
         displayMessage("📝 완료할 주문 ID 를 입력하세요: ");
