@@ -119,13 +119,13 @@ public class SalesDataController {
 			case "y":
 			case "Y":
 				salesDataManager.saveFileToCSV(salesStats, type);
-				viewSalesMenu();
-				break;
+				// viewSalesMenu();
+				return;
 			case "n":
 			case "N":
 				System.out.println("저장이 취소되었습니다.");
-				viewSalesMenu();
-				break;
+				// viewSalesMenu();
+				return;
 			default:
 				System.out.println("잘못된 입력입니다.");
 				break;
@@ -214,6 +214,7 @@ public class SalesDataController {
 				break;
 			case "7":
 				printPeriodSalesData();
+				break;
 			case "8":
 				return;
 			default:

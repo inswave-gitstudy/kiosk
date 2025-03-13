@@ -23,11 +23,11 @@ public class AdminManager {
 	public AdminManager() {
 		this.admin = new Admin();
 		this.sc = new Scanner(System.in);
-		this.salt = saltLoad();
-		
+
 		if(admin.getPassword() == null) {
 			initializePassword("admin74");
 		}
+		this.salt = saltLoad();
 	}
 	
 	//로그인 기능
@@ -63,7 +63,7 @@ public class AdminManager {
     				String newHashPassword = encryptPassword(password, salt);
     	        	savePasswordFile(newHashPassword, salt); //비밀번호를 암호화후에 파일에 저장
     	        	admin.setPassword(newHashPassword);//Admin 클래스에 있는 비밀번호를 새로운 비밀번호로 수정
-    	        	
+    	        	this.salt = saltLoad();
     	        	System.out.println("비밀번호 수정되었습니다.");
     	        	break;
     			}
