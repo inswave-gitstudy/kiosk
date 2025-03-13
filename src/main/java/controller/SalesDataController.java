@@ -119,11 +119,13 @@ public class SalesDataController {
 			case "y":
 			case "Y":
 				salesDataManager.saveFileToCSV(salesStats, type);
-				return;
+				viewSalesMenu();
+				break;
 			case "n":
 			case "N":
 				System.out.println("저장이 취소되었습니다.");
-				return;
+				viewSalesMenu();
+				break;
 			default:
 				System.out.println("잘못된 입력입니다.");
 				break;
@@ -153,7 +155,7 @@ public class SalesDataController {
 		while(true) {
 			System.out.print("마지막일>> ");
 			endDate = sc.nextLine();
-			if(startDate.equals("n") || startDate.equals("N")) {
+			if(endDate.equals("n") || endDate.equals("N")) {
 				viewSalesMenu();
 				return;
 			}
