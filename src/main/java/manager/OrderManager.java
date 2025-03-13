@@ -126,7 +126,7 @@ public class OrderManager {
             System.out.println("[백업 시작] 주문 데이터를 저장합니다...");
             flushOrder();
             System.out.println("[백업 완료] 주문 데이터 저장 완료.");
-        }, 2, 2, TimeUnit.HOURS);
+        }, 0, 10, TimeUnit.MINUTES);
     }
 
     // 스케줄러 종료 - scheduler

@@ -23,10 +23,10 @@ public class OrderController {
         this.scanner = scanner;
         orderManager.loadOrder();
         orderManager.startBackupScheduler(); // 2시간마다 자동 백업 실행
-        orderManager.generateTestOrders(100);
-        for (int i = 0; i < 100; i++) {
-            orderManager.completeOrder(i);
-        }
+        // orderManager.generateTestOrders(100);
+        // for (int i = 0; i < 100; i++) {
+        //     orderManager.completeOrder(i);
+        // }
     }
 
     // 주문 생성, 카트에서 목록 로딩 후 예외처리 추가
