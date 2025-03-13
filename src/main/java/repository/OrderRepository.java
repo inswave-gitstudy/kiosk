@@ -11,9 +11,10 @@ public interface OrderRepository {
     // 역직렬화를 통한 파일 백업 관리용
     Map<Integer, Order> loadOrder();
 
-    // 특정 날자 주문 목록 조회용
-    default Map<Integer, Order> loadOrder(String day) {
+    default Map<Integer, Order> loadOrder(String filePath) {
         System.out.println("특정 날자 주문 목록 조회용으로 오버라이딩해야함");
         return Map.of();
     }
+
+    default void saveReceipt(Order order) {}
 }

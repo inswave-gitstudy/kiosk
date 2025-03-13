@@ -29,15 +29,30 @@ public class MainController {
     }
 
     public void start() {
-        while (true) {
-            System.out.println("=== 카페 키오스크 ===");
-            System.out.println("1. 메뉴 선택하기");
-            System.out.println("2. 장바구니 보기");
-            System.out.println("3. 주문하기");
-            System.out.println("4. 관리자 화면");
-            System.out.println("5. 종료");
-            System.out.print("선택: ");
+        // 시안색상(Cyan)으로 통일
+        String colorReset = "\u001B[0m";
+        String colorCyan = "\u001B[36m";
 
+        // 모든 텍스트를 시안색상으로 출력
+        System.out.println(colorCyan + "██╗███╗   ██╗███████╗ ██████╗ ██████╗ ██████╗ ████████╗██████╗");
+        System.out.println("██║████╗  ██║██╔════╝██╔══██╗██╔══██╗██╔══██╗██╔════╝██╔══██╗");
+        System.out.println("██║██╔██╗ ██║███████╗██║  ██║██████╔╝██████╔╝█████╗  ██████╔╝");
+        System.out.println("██║██║╚██╗██║╚════██║██║  ██║██╔══██╗██╔══██╗██╔══╝  ██╔══██╗");
+        System.out.println("██║██║ ╚████║███████║╚██████╔╝██║  ██║██████╔╝███████╗██║  ██║");
+        System.out.println("╚═╝╚═╝  ╚═══╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚════╝ ╚══════╝╚═╝  ╚═╝");
+        System.out.println(colorReset);
+        while (true) {
+            // 메뉴 제목 및 구분선
+            System.out.println("\n=================== 카페 키오스크 ===================");
+            System.out.println("📋 1. 메뉴 선택하기");
+            System.out.println("🛒 2. 장바구니 보기");
+            System.out.println("📝 3. 주문하기");
+            System.out.println("📋 4. 주문 처리 현황 보기");
+            System.out.println("🔑 5. 관리자 화면");
+            System.out.println("❌ 6. 종료");
+            System.out.print("👉 선택: ");
+
+            // 사용자 입력 처리
             int choice = Integer.parseInt(scanner.nextLine());
 
             switch (choice) {
@@ -48,18 +63,20 @@ public class MainController {
                     cartController.run();
                     break;
                 case 3:
-                     orderController.createOrder(cartController.getCartItems());
+                    orderController.createOrder(cartController.getCartItems());
                     break;
                 case 4:
-                    adminController.viewAdminLoginMenu();
+                    orderController.getRecentOrder();
                     break;
                 case 5:
-                    System.out.println("프로그램 종료");
+                    adminController.viewAdminLoginMenu();
+                    break;
+                case 6:
                     scanner.close();
                     orderController.close();
                     return;
                 default:
-                    System.out.println("올바른 번호를 입력하세요.");
+                    System.out.println("⚠️ 올바른 번호를 입력하세요.");
             }
         }
     }
