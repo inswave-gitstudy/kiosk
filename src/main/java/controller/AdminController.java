@@ -105,6 +105,7 @@ public class AdminController {
 				break;
 			case "2":
 				//주문조회
+				orderController.getOrderById();
 				break;
 			case "3":
 				orderController.getAllOrder();
