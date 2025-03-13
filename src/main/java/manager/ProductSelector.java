@@ -28,7 +28,7 @@ public class ProductSelector {
             int productTypeChoice = getValidNumberInput("상품 종류를 선택하세요: ", 0, 2);
 
             if (productTypeChoice == 0) {
-                return null;  // 이 부분은 메인 화면으로 돌아가도록 종료하는 처리입니다.
+                return null;  // 이 부분은 이전 화면으로 돌아가도록 종료하는 처리입니다.
             }
 
             if (productTypeChoice == 1) {
@@ -61,7 +61,7 @@ public class ProductSelector {
 
             int productNumber = getValidNumberInput("커피 번호 입력: ", 0, products.size()) - 1;
             if (productNumber == -1) { 
-                // 0을 누르면 커피 선택 화면을 벗어날 수 있도록 하여 메인 화면으로 돌아가게 됨
+                // 0을 누르면 커피 선택 화면을 벗어날 수 있도록 하여 상품 선택 화면으로 돌아가게 됨
                 break;
             }
 
@@ -87,7 +87,7 @@ public class ProductSelector {
             coffee.setBeanType(BEAN_TYPES.get(beanChoice - 1));
 
             System.out.println("아이스 여부를 선택하세요:");
-            System.out.println("0. 커피 선택으로 돌아가기  1. 핫  2. 아이스");
+            System.out.println("0. 커피 선택으로 돌아가기");
             System.out.println("1. 핫");
             System.out.println("2. 아이스");
             int icedChoice = getValidNumberInput("번호 입력: ", 0, 2);
@@ -115,7 +115,7 @@ public class ProductSelector {
 
             int productNumber = getValidNumberInput("디저트 번호 입력: ", 0, products.size()) - 1;
             if (productNumber == -1) { 
-                // 0을 누르면 디저트 선택 화면을 벗어날 수 있도록 하여 메인 화면으로 돌아가게 됨
+                // 0을 누르면 디저트 선택 화면을 벗어날 수 있도록 하여 상품 선택 화면으로 돌아가게 됨
                 break;
             }
 
