@@ -66,6 +66,7 @@ public class OrderController {
         displayMessage("📝 조회할 주문 ID 를 입력하세요: ");
         int orderId = Integer.parseInt(scanner.nextLine());
         Order order = orderManager.getOrderById(orderId);
+        if(order == null) displayMessage("❌ 존재하지 않는 주문번호 입니다.");
         displayOrderDetails(order);
     }
 
